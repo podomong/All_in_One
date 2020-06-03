@@ -60,9 +60,15 @@ public class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ViewHold
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+
+
+
+
             contentNumberView = itemView.findViewById(R.id.contentNumber);
             contentInstructionView = itemView.findViewById(R.id.contentInstruction);
 
         }
     }
+
+
 }

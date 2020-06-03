@@ -20,6 +20,16 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.ViewHold
 
         ViewHolder(View itemview){
             super(itemview);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int pos = getAdapterPosition();
+                    if(pos != RecyclerView.NO_POSITION){
+                        if(listener != null)
+                            listener.onItemClick(v, pos);
+                    }
+                }
+            });
             imageView = itemview.findViewById(R.id.chapterImage);
             titleView = itemview.findViewById(R.id.chapterTitle);
         }
@@ -64,5 +74,15 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.ViewHold
     @Override
     public int getItemCount() {
         return chapterItems.size();
+    }
+
+    private OnItemClickListener listener = null ;
+
+    public interface OnItemClickListener {
+        void onItemClick(View v, int position) ;
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener ;
     }
 }
