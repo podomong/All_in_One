@@ -48,27 +48,20 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.ViewHold
         final Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        View courseContentView = inflater.inflate(R.layout.chapter_item, parent,false);
-        ViewHolder viewHolder = new ViewHolder(courseContentView);
+        View chapterItemView = inflater.inflate(R.layout.chapter_item, parent,false);
+        ViewHolder viewHolder = new ViewHolder(chapterItemView);
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        ChapterItem courseContent = chapterItems.get(position);
+        ChapterItem chapterItem = chapterItems.get(position);
 
         TextView titleView = holder.titleView;
         ImageView imageView = holder.imageView;
 
-        titleView.setText(courseContent.getTitle());
-        imageView.setImageResource(courseContent.getImageResource());
-
-        /*holder.cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(context,"You touched this cardview. Well done.",Toast.LENGTH_SHORT).show();
-            }
-        });*/
+        titleView.setText(chapterItem.getTitle());
+        imageView.setImageResource(chapterItem.getImageResource());
     }
 
     @Override

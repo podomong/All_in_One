@@ -4,11 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".ChapterAndContentActivity">
 
-    <fragment
+    <FrameLayout
         android:id="@+id/chapterFragment"
-        android:name="com.example.chapterandcontentfragment.ChapterFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         app:layout_constraintHorizontal_weight="0.4"
