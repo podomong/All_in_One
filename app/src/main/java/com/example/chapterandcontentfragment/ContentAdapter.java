@@ -1,12 +1,15 @@
 package com.example.chapterandcontentfragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -41,12 +44,13 @@ public class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ViewHold
         contentNumberView.setText(Integer.toString(contentItem.getNumber()));
         contentInstructionView.setText(contentItem.getInstruction());
 
-        /*holder.cardView.setOnClickListener(new View.OnClickListener() {
+        holder.contentCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                context.startActivity(new Intent(context, BoardActivity.class));
                 Toast.makeText(context,"You touched this cardview. Well done.",Toast.LENGTH_SHORT).show();
             }
-        });*/
+        });
     }
 
     @Override
@@ -57,13 +61,12 @@ public class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ViewHold
     public class ViewHolder extends RecyclerView.ViewHolder{
         TextView contentNumberView;
         TextView contentInstructionView;
+        CardView contentCardView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-
-
-
+            contentCardView = itemView.findViewById(R.id.contentCardView);
             contentNumberView = itemView.findViewById(R.id.contentNumber);
             contentInstructionView = itemView.findViewById(R.id.contentInstruction);
 
