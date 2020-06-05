@@ -1,26 +1,28 @@
 package com.example.chapterandcontentfragment;
 
+import android.graphics.Bitmap;
+
 public class CourseItem {
-    private int illustrationResource;
+    private Bitmap illustrationResource;
     private String title;
     private String instruction;
 
     CourseItem(){
-        illustrationResource = 0;
+        illustrationResource = null;
         instruction = null;
     }
 
-    CourseItem(int illustrationResource, String title, String instruction){
+    CourseItem(Bitmap illustrationResource, String title, String instruction){
         this.illustrationResource = illustrationResource;
         this.title = title;
         this.instruction = instruction;
     }
 
-    public void setIllustrationResource(final int illustrationResource){
+    public void setIllustrationResource(final Bitmap illustrationResource){
         this.illustrationResource = illustrationResource;
     }
 
-    public int getIllustrationResource(){
+    public Bitmap getIllustrationResource(){
         return illustrationResource;
     }
 

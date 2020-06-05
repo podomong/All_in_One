@@ -1,5 +1,9 @@
 package com.example.chapterandcontentfragment;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,25 +20,54 @@ public class ChapterFragment extends Fragment {
     private RecyclerView recyclerView;
     private ChapterAdapter chapterAdapter;
     private ArrayList<ChapterItem> chapterItems;
+    private int courseId;
+
+    public static ChapterFragment newInstance(int courseId){
+        ChapterFragment chapterFragment = new ChapterFragment();
+        Bundle args = new Bundle();
+        args.putInt(AllinOneContract.Course.COURSE_ID, courseId);
+        chapterFragment.setArguments(args);
+        return chapterFragment;
+    }
+
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+        courseId = getArguments().getInt(AllinOneContract.Course.COURSE_ID);
+
+    }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup)inflater.inflate(R.layout.chapter_fragment, container, false);
 
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.chapterList);
         chapterItems = new ArrayList<>();
-        for(int i=1;i<=20;i++)
-            chapterItems.add(new ChapterItem("Chapter "+i,R.drawable.ic_launcher_foreground));
-        chapterAdapter = new ChapterAdapter(getActivity(), chapterItems);
 
+        AllinOneDBHelper dbHelper = new AllinOneDBHelper(getActivity());
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM "+AllinOneContract.Chapter.TABLE_NAME, null);
+        while(cursor.moveToNext()){
+            int curCourseId = cursor.getInt(cursor.getColumnIndex(AllinOneContract.Chapter.COURSE_ID));
+            if(curCourseId != this.courseId) break;
+            String title =
+                    cursor.getString(cursor.getColumnIndex(AllinOneContract.Chapter.TITLE));
+            byte[] rawImage =
+                    cursor.getBlob(cursor.getColumnIndex(AllinOneContract.Chapter.IMAGE));
+            Bitmap bmpImage = BitmapFactory.decodeByteArray(rawImage, 0, rawImage.length);
+            chapterItems.add(new ChapterItem(title, bmpImage));
+        }
+        db.close();
+        dbHelper.close();
+
+        //final int courseId;
+        //final int chapterId;
+
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.chapterList);
+        chapterAdapter = new ChapterAdapter(getActivity(), chapterItems);
         chapterAdapter.setOnItemClickListener(new ChapterAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
                 Toast.makeText(getActivity(),"Hello. You pushed Chapter "+(position+1)+".",Toast.LENGTH_SHORT).show();
 
-                Fragment detailFragment = new DetailFragment();
-                Bundle bundle = new Bundle();
-                bundle.putInt("CURRENT_CHAPTER", position+1);
-                detailFragment.setArguments(bundle);
+                Fragment detailFragment = DetailFragment.newInstance(courseId, position+1);
 
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.detailFragment, detailFragment);

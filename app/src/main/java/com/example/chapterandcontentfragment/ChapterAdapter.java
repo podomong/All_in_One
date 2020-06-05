@@ -64,7 +64,7 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.ViewHold
         ImageView imageView = holder.imageView;
 
         titleView.setText(chapterItem.getTitle());
-        imageView.setImageResource(chapterItem.getImageResource());
+        imageView.setImageBitmap(chapterItem.getImageResource());
     }
 
     @Override

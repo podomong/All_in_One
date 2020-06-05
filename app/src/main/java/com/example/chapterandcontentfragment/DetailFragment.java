@@ -1,11 +1,16 @@
 package com.example.chapterandcontentfragment;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,17 +24,53 @@ public class DetailFragment extends Fragment {
     private ArrayList<ContentItem> contentItems;
     public final String CURRENT_CHAPTER = "CURRENT_CHAPTER";
 
+    private int courseId;
+    private int chapterId;
+
+    public static DetailFragment newInstance(int courseId, int chapterId){
+        DetailFragment detailFragment = new DetailFragment();
+        Bundle args = new Bundle();
+        args.putInt(AllinOneContract.Content.COURSE_ID, courseId);
+        args.putInt(AllinOneContract.Content.CHPATER_ID, chapterId);
+        detailFragment.setArguments(args);
+        return detailFragment;
+    }
+
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+        courseId = getArguments().getInt(AllinOneContract.Chapter.COURSE_ID);
+        chapterId = getArguments().getInt(AllinOneContract.Chapter.CHPATER_ID);
+    }
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup)inflater.inflate(R.layout.detail_fragment, container, false);
         TextView titleView = rootView.findViewById(R.id.chapterTitleInContentList);
+        titleView.setText("Chapter "+Integer.toString(chapterId));
+        Toast.makeText(getActivity(), courseId +", "+chapterId,Toast.LENGTH_SHORT).show();
+        contentItems = new ArrayList<>();
 
-        int currentChapter = getArguments().getInt(CURRENT_CHAPTER);
-        titleView.setText("Chapter "+Integer.toString(currentChapter));
+        AllinOneDBHelper dbHelper = new AllinOneDBHelper(getActivity());
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM "+AllinOneContract.Content.TABLE_NAME +
+                        " WHERE "+AllinOneContract.Content.COURSE_ID+" = "+courseId+
+                        " AND "+AllinOneContract.Content.CHPATER_ID + " = "+chapterId
+                , null);
+
+        while(cursor.moveToNext()){
+            int curCourseId = cursor.getInt(cursor.getColumnIndex(AllinOneContract.Content.COURSE_ID));
+            int curChapterId = cursor.getInt(cursor.getColumnIndex(AllinOneContract.Content.CHPATER_ID));
+            if(curCourseId != this.courseId || curChapterId != this.chapterId) break;
+            String instruction =
+                    cursor.getString(cursor.getColumnIndex(AllinOneContract.Content.INSTRUCTION));
+            int curContentId = cursor.getInt(cursor.getColumnIndex(AllinOneContract.Content.CONTENT_ID));
+            int detailId = cursor.getInt(cursor.getColumnIndex("_id"));
+            contentItems.add(new ContentItem(curContentId, instruction, detailId));
+        }
+        db.close();
+        dbHelper.close();
+        cursor.close();
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.contentList);
-        contentItems = new ArrayList<>();
-        for(int i=1;i<=currentChapter;i++)
-            contentItems.add(new ContentItem(i,"This is instruction"));
         contentAdapter = new ContentAdapter(getActivity(), contentItems);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(contentAdapter);

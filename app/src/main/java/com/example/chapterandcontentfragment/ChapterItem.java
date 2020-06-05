@@ -1,23 +1,25 @@
 package com.example.chapterandcontentfragment;
 
+import android.graphics.Bitmap;
+
 public class ChapterItem {
-    private int imageResource;
+    private Bitmap imageResource;
     private String title;
 
     ChapterItem(){
-        imageResource = 0;
+        imageResource = null;
         title = "";
     }
 
-    ChapterItem(String title, int imageResource){
+    ChapterItem(String title, Bitmap imageResource){
         this.title = title;
         this.imageResource = imageResource;
     }
 
-    public void setImageResource(int imageResource){
+    public void setImageResource(Bitmap imageResource){
         this.imageResource = imageResource;
     }
-    public int getImageResource(){
+    public Bitmap getImageResource(){
         return imageResource;
     }
     public void setTitle(String title){

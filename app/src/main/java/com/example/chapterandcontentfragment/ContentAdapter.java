@@ -36,8 +36,8 @@ public class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        ContentItem contentItem = contentItems.get(position);
+    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
+        final ContentItem contentItem = contentItems.get(position);
 
         TextView contentNumberView = holder.contentNumberView;
         TextView contentInstructionView = holder.contentInstructionView;
@@ -47,8 +47,10 @@ public class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ViewHold
         holder.contentCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                context.startActivity(new Intent(context, BoardActivity.class));
-                Toast.makeText(context,"You touched this cardview. Well done.",Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(context, BoardActivity.class);
+                intent.putExtra("DETAIL_ID", contentItem.getDetailId());
+                context.startActivity(intent);
+                //Toast.makeText(context,"You touched this cardview. Well done.",Toast.LENGTH_SHORT).show();
             }
         });
     }

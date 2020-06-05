@@ -2,6 +2,7 @@ package com.example.chapterandcontentfragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +19,6 @@ import java.util.List;
 public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder> {
     private Context context;
 
-
-
     public class ViewHolder extends RecyclerView.ViewHolder{
         ImageView illustrationView;
         TextView titleView;
@@ -27,8 +26,6 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
         CardView cardView;
 
         public ViewHolder(View itemView) {
-            // Stores the itemView in a public final member variable that can be used
-            // to access the context from any ViewHolder instance.
             super(itemView);
 
             illustrationView = itemView.findViewById(R.id.illustrationView);
@@ -67,12 +64,15 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
 
         instructionView.setText(courseItem.getInstruction());
         titleView.setText(courseItem.getTitle());
-        illustrationView.setImageResource(courseItem.getIllustrationResource());
+        illustrationView.setImageBitmap(courseItem.getIllustrationResource());
 
+        final int COURSE_ID = position+1;
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                context.startActivity(new Intent(context, ChapterAndContentActivity.class));
+                Intent intent = new Intent(context, ChapterAndContentActivity.class);
+                intent.putExtra(AllinOneContract.Course.COURSE_ID, COURSE_ID);
+                context.startActivity(intent);
                 Toast.makeText(context,"You touched this cardview. Well done.",Toast.LENGTH_SHORT).show();
             }
         });
