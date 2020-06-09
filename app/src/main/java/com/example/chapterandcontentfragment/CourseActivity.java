@@ -2,6 +2,7 @@ package com.example.chapterandcontentfragment;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,14 +27,16 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 
 public class CourseActivity extends AppCompatActivity {
-    ArrayList<CourseItem>courseItems;
+    ArrayList<CourseItem>courseItems= new ArrayList<CourseItem>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course);
 
-        courseItems = new ArrayList<CourseItem>();
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setCustomView(R.layout.custom_bar);
 
         createDB(this);
 
@@ -54,10 +57,15 @@ public class CourseActivity extends AppCompatActivity {
         db.close();
         dbHelper.close();
 
+
+
         RecyclerView recyclerView = findViewById(R.id.courseRecyclerView);
         CourseAdapter adapter = new CourseAdapter(courseItems, this);
         recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        recyclerView.setLayoutManager(linearLayoutManager);
+
     }
 
     private static void createDB(Context context){

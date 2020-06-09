@@ -28,8 +28,8 @@
                 android:id="@+id/illustrationView"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:maxWidth="500dp"
-                android:maxHeight="500dp"
+                android:maxWidth="650dp"
+                android:maxHeight="650dp"
                 android:adjustViewBounds="true"/>
         </androidx.cardview.widget.CardView>
 
@@ -38,13 +38,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="5dp"
-            android:textSize="28sp" />
+            android:fontFamily="@font/cookie_run_bold"
+            android:textColor="@color/colorChocolate"
+            android:textSize="24sp" />
 
         <TextView
             android:id="@+id/instructionView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="5dp"
+            android:fontFamily="@font/cookie_run_regular"
+            android:textColor="@color/colorChocolate"
             android:textSize="20sp" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

@@ -25,6 +25,7 @@ public class ChapterFragment extends Fragment {
     public static ChapterFragment newInstance(int courseId){
         ChapterFragment chapterFragment = new ChapterFragment();
         Bundle args = new Bundle();
+        //args.putString(AllinOneContract.Chapter.TITLE, );
         args.putInt(AllinOneContract.Course.COURSE_ID, courseId);
         chapterFragment.setArguments(args);
         return chapterFragment;
@@ -47,6 +48,7 @@ public class ChapterFragment extends Fragment {
         while(cursor.moveToNext()){
             int curCourseId = cursor.getInt(cursor.getColumnIndex(AllinOneContract.Chapter.COURSE_ID));
             if(curCourseId != this.courseId) break;
+            int chapterId = cursor.getInt(cursor.getColumnIndex(AllinOneContract.Chapter.CHPATER_ID));
             String title =
                     cursor.getString(cursor.getColumnIndex(AllinOneContract.Chapter.TITLE));
             byte[] rawImage =
@@ -54,6 +56,7 @@ public class ChapterFragment extends Fragment {
             Bitmap bmpImage = BitmapFactory.decodeByteArray(rawImage, 0, rawImage.length);
             chapterItems.add(new ChapterItem(title, bmpImage));
         }
+        cursor.close();
         db.close();
         dbHelper.close();
 
@@ -67,7 +70,11 @@ public class ChapterFragment extends Fragment {
             public void onItemClick(View v, int position) {
                 Toast.makeText(getActivity(),"Hello. You pushed Chapter "+(position+1)+".",Toast.LENGTH_SHORT).show();
 
-                Fragment detailFragment = DetailFragment.newInstance(courseId, position+1);
+                Fragment detailFragment = DetailFragment.newInstance(courseId, position+1, chapterItems.get(position).getTitle());
+                //Bundle args = new Bundle();
+                //args.putString(AllinOneContract.Chapter.TITLE, chapterItems.get(position).getTitle());
+                //args.putInt(AllinOneContract.Course.COURSE_ID, courseId);
+                //detailFragment.setArguments(args);
 
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.detailFragment, detailFragment);

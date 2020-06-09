@@ -26,12 +26,14 @@ public class DetailFragment extends Fragment {
 
     private int courseId;
     private int chapterId;
+    private String chapterTitle;
 
-    public static DetailFragment newInstance(int courseId, int chapterId){
+    public static DetailFragment newInstance(int courseId, int chapterId, String chapterTitle){
         DetailFragment detailFragment = new DetailFragment();
         Bundle args = new Bundle();
         args.putInt(AllinOneContract.Content.COURSE_ID, courseId);
         args.putInt(AllinOneContract.Content.CHPATER_ID, chapterId);
+        args.putString(AllinOneContract.Chapter.TITLE, chapterTitle);
         detailFragment.setArguments(args);
         return detailFragment;
     }
@@ -40,21 +42,33 @@ public class DetailFragment extends Fragment {
         super.onCreate(savedInstanceState);
         courseId = getArguments().getInt(AllinOneContract.Chapter.COURSE_ID);
         chapterId = getArguments().getInt(AllinOneContract.Chapter.CHPATER_ID);
+        chapterTitle = getArguments().getString(AllinOneContract.Chapter.TITLE);
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup)inflater.inflate(R.layout.detail_fragment, container, false);
         TextView titleView = rootView.findViewById(R.id.chapterTitleInContentList);
-        titleView.setText("Chapter "+Integer.toString(chapterId));
-        Toast.makeText(getActivity(), courseId +", "+chapterId,Toast.LENGTH_SHORT).show();
+        titleView.setText(chapterTitle);
+        //Toast.makeText(getActivity(), courseId +", "+chapterId,Toast.LENGTH_SHORT).show();
         contentItems = new ArrayList<>();
 
         AllinOneDBHelper dbHelper = new AllinOneDBHelper(getActivity());
         SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        /*Cursor tempCursor = db.rawQuery("SELECT * FROM "+AllinOneContract.Chapter.TABLE_NAME +
+                        " WHERE "+AllinOneContract.Chapter.COURSE_ID+" = "+courseId+
+                        " AND "+AllinOneContract.Chapter.CHPATER_ID + " = "+chapterId
+                , null);
+        String chapterTitle = tempCursor.getString(tempCursor.getColumnIndex(AllinOneContract.Chapter.TITLE));
+        titleView.setText(chapterTitle);
+        tempCursor.close();*/
+
         Cursor cursor = db.rawQuery("SELECT * FROM "+AllinOneContract.Content.TABLE_NAME +
                         " WHERE "+AllinOneContract.Content.COURSE_ID+" = "+courseId+
                         " AND "+AllinOneContract.Content.CHPATER_ID + " = "+chapterId
                 , null);
+
+
 
         while(cursor.moveToNext()){
             int curCourseId = cursor.getInt(cursor.getColumnIndex(AllinOneContract.Content.COURSE_ID));
@@ -66,9 +80,9 @@ public class DetailFragment extends Fragment {
             int detailId = cursor.getInt(cursor.getColumnIndex("_id"));
             contentItems.add(new ContentItem(curContentId, instruction, detailId));
         }
+        cursor.close();
         db.close();
         dbHelper.close();
-        cursor.close();
 
         recyclerView = (RecyclerView) rootView.findViewById(R.id.contentList);
         contentAdapter = new ContentAdapter(getActivity(), contentItems);

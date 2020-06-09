@@ -39,9 +39,9 @@ public class ContentAdapter extends RecyclerView.Adapter<ContentAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         final ContentItem contentItem = contentItems.get(position);
 
-        TextView contentNumberView = holder.contentNumberView;
+        //TextView contentNumberView = holder.contentNumberView;
         TextView contentInstructionView = holder.contentInstructionView;
-        contentNumberView.setText(Integer.toString(contentItem.getNumber()));
+        //contentNumberView.setText(Integer.toString(contentItem.getNumber()));
         contentInstructionView.setText(contentItem.getInstruction());
 
         holder.contentCardView.setOnClickListener(new View.OnClickListener() {

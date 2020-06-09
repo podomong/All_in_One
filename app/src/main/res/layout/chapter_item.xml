@@ -4,10 +4,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/chapterCardView"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="154dp"
     android:clickable="true"
     android:foreground="?android:attr/selectableItemBackground"
 
+    app:cardBackgroundColor="@color/colorChocolate"
     app:cardCornerRadius="64dp"
     app:cardElevation="2dp"
     app:contentPadding="10dp"
@@ -16,20 +17,26 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <ImageView
-            android:id="@+id/chapterImage"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/chapterNumber"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:maxHeight="100dp"
-            android:maxWidth="100dp"
-            android:adjustViewBounds="true" />
+            android:layout_gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:fontFamily="@font/cookie_run_bold"
+            android:textColor="@color/colorBrightYellow"
+            android:textSize="32sp"
+            />
         <TextView
             android:id="@+id/chapterTitle"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
+            android:breakStrategy="simple"
             android:layout_gravity="center_vertical"
-            android:textSize="32dp"/>
+            android:fontFamily="@font/cookie_run_bold"
+            android:textColor="@color/colorBrightYellow"
+            android:textSize="32sp"/>
 
     </LinearLayout>
 

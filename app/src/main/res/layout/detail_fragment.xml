@@ -7,14 +7,17 @@
         android:id="@+id/chapterTitleInContentList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="32sp"
+        android:singleLine="true"
+        android:fontFamily="@font/cookie_run_bold"
+        android:textColor="@color/colorChocolate"
+        android:textSize="48sp"
+        android:paddingBottom="20dp"
         android:gravity="center"
-        android:text="Chater Title"
-        android:layout_weight="1" />
+/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/contentList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="9" />
+     />
 </LinearLayout>

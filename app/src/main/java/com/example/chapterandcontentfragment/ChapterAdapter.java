@@ -7,10 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -18,7 +16,7 @@ import java.util.List;
 
 public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder{
-        ImageView imageView;
+        TextView numberView;
         TextView titleView;
 
         ViewHolder(View itemview){
@@ -33,7 +31,7 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.ViewHold
                     }
                 }
             });
-            imageView = itemview.findViewById(R.id.chapterImage);
+            numberView = itemview.findViewById(R.id.chapterNumber);
             titleView = itemview.findViewById(R.id.chapterTitle);
         }
     }
@@ -59,12 +57,11 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ChapterItem chapterItem = chapterItems.get(position);
-
+        TextView numberView = holder.numberView;
         TextView titleView = holder.titleView;
-        ImageView imageView = holder.imageView;
 
         titleView.setText(chapterItem.getTitle());
-        imageView.setImageBitmap(chapterItem.getImageResource());
+        numberView.setText(Integer.toString(position+1)+". ");
     }
 
     @Override
