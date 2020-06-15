@@ -5,45 +5,32 @@ import android.content.Context;
 import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.Stack;
 
 public class VerticalBoard extends Board{
     private int DISTANCE = 50;
-
-    private Stack<Pair<Integer, Integer>> changedStateStack;
+    private int MARGIN = 2;
+    private Stack<Pair<Integer, Integer>>changedStateStack;
     private int currentStates[][];
-    private ImageView blockImages[][];
+    private View blockViews[][];
     private int scores[];
 
     private TextView scoreView;
     private boolean isGuideOn;
     private int carryPos;
 
-    VerticalBoard(){
-        BOARD_ROW = 3;
-        BOARD_COL = 3;
-        changedStateStack = new Stack<Pair<Integer, Integer>>();
-        currentStates = new int[BOARD_ROW][BOARD_COL];
-
-        for(int i=0;i<BOARD_ROW;i++){
-            for(int j=0;j<BOARD_COL;j++)
-                currentStates[i][j] = DOWN;
-        }
-    }
-
     VerticalBoard(int boardRow, int boardCol, Context context){
         super(boardRow, boardCol, context);
 
         changedStateStack = new Stack<Pair<Integer, Integer>>();
         currentStates = new int[BOARD_ROW][BOARD_COL];
-        blockImages = new ImageView[BOARD_ROW][BOARD_COL];
+        blockViews = new View[BOARD_ROW][BOARD_COL];
         scores = new int[BOARD_COL];
         isGuideOn = false;
 
-        for(int i=0;i<BOARD_ROW;i++){
+        for(int i=1;i<BOARD_ROW;i++){
             for(int j=0;j<BOARD_COL;j++)
                 currentStates[i][j] = DOWN;
         }
@@ -68,7 +55,7 @@ public class VerticalBoard extends Board{
     private void checkChange(final int TOUTCHED_ROW, final int TOUTCHED_COL){
         switch (currentStates[TOUTCHED_ROW][TOUTCHED_COL]){
             case DOWN:
-                for(int row = TOUTCHED_ROW; row >= 0; row--){
+                for(int row = TOUTCHED_ROW; row > 0; row--){
                     if(currentStates[row][TOUTCHED_COL] == UP) break;
                     changedStateStack.push(new Pair<Integer, Integer>(row, TOUTCHED_COL));
                 }
@@ -87,7 +74,7 @@ public class VerticalBoard extends Board{
             case DOWN:
                 currentStates[i][j] = UP;
                 scores[j]++;
-                if(scores[j] == BOARD_ROW)
+                if(scores[j] == BOARD_ROW-1)
                     carryPos = j;
                 break;
             case UP:
@@ -101,10 +88,10 @@ public class VerticalBoard extends Board{
         final int CUR_STATE = currentStates[i][j];
         switch (CUR_STATE){
             case DOWN:
-                blockImages[i][j].animate().translationY(0).start();
+                blockViews[i][j].animate().translationY(0).start();
                 break;
             case UP:
-                blockImages[i][j].animate().translationY(-DISTANCE).start();
+                blockViews[i][j].animate().translationY(-(DISTANCE+MARGIN)).start();
                 break;
         }
     }
@@ -122,7 +109,7 @@ public class VerticalBoard extends Board{
 
     private void resetBlocks(int j){
         scores[j] = 0;
-        for(int i=0;i<BOARD_ROW;i++){
+        for(int i=1;i<BOARD_ROW;i++){
             if(currentStates[i][j] == DOWN) break;
             currentStates[i][j] = DOWN;
             moveBlock(i,j);
@@ -132,9 +119,9 @@ public class VerticalBoard extends Board{
     private void guideMove(){
         if(!isGuideOn || carryPos == -1) return;
         for(int j=carryPos;j>=0;j--){
-            if(scores[j] != BOARD_ROW) break;
+            if(scores[j] != BOARD_ROW-1) break;
             if(j>0){
-                int i = scores[j-1];
+                int i = scores[j-1]+1;
                 toggleState(i, j-1);
                 moveBlock(i, j-1);
                 resetBlocks(j);
@@ -146,12 +133,19 @@ public class VerticalBoard extends Board{
         carryPos = -1;
     }
 
-    private void setBlockImage(int i, int j, int imageId){
+    public void setBlockViews(int blockViewsId[][]){
+        for(int i=1;i<BOARD_ROW;i++){
+            for(int j=0;j<BOARD_COL;j++)
+                setBlockView(i,j,blockViewsId[i][j]);
+        }
+    }
+
+    private void setBlockView(int i, int j, int blockId){
         final int constantRowId = i;
         final int constantColId = j;
-        blockImages[i][j] = ((Activity)mContext).findViewById(imageId);
+        blockViews[i][j] = ((Activity)mContext).findViewById(blockId);
 
-        blockImages[i][j].setOnTouchListener(new View.OnTouchListener(){
+        blockViews[i][j].setOnTouchListener(new View.OnTouchListener(){
             int rowId = constantRowId;
             int colId = constantColId;
 
@@ -180,14 +174,10 @@ public class VerticalBoard extends Board{
         });
     }
 
-    public void setBlockImages(int imageViewsId[][]){
-        for(int i=0;i<BOARD_ROW;i++){
-            for(int j=0;j<BOARD_COL;j++)
-                setBlockImage(i,j,imageViewsId[i][j]);
-        }
-    }
-
-    public void setDistance(int distance) {DISTANCE = distance;};
+    public void setDistance(int distance, int margin) {
+        DISTANCE = distance;
+        MARGIN = margin;
+    };
 
     public void setGuide(boolean flag){ isGuideOn = flag; }
 }

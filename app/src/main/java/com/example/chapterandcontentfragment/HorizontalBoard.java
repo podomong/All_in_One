@@ -5,42 +5,37 @@ import android.content.Context;
 import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.Stack;
 
 public class HorizontalBoard extends Board{
     private int DISTANCE = 50;
-
+    private int MARGIN = 2;
     private Stack<Pair<Integer, Integer>> changedStateStack;
     private int currentStates[][];
-    private ImageView blockImages[][];
+    private View blockViews[][];
     private int scores[];
 
     private TextView scoreView;
     private boolean isGuideOn;
-
-    HorizontalBoard(){
-        super();
-    }
 
     HorizontalBoard(int boardRow, int boardCol, Context context){
         super(boardRow, boardCol, context);
 
         changedStateStack = new Stack<Pair<Integer, Integer>>();
         currentStates = new int[BOARD_ROW][BOARD_COL];
-        blockImages = new ImageView[BOARD_ROW][BOARD_COL];
+        blockViews = new View[BOARD_ROW][BOARD_COL];
         scores = new int[BOARD_COL];
         isGuideOn = false;
 
         for(int i=0;i<BOARD_ROW;i++){
-            for(int j=0;j<BOARD_COL;j++)
+            for(int j=1;j<BOARD_COL;j++)
                 currentStates[i][j] = RIGHT;
         }
 
         for(int i=0;i<BOARD_ROW;i++)
-            scores[i] = 0;
+            scores[i] = 1;
         scoreView = ((Activity)mContext).findViewById(R.id.scoreView);
     }
 
@@ -60,7 +55,7 @@ public class HorizontalBoard extends Board{
                 }
                 break;
             case RIGHT:
-                for(int col = TOUTCHED_COL; col >= 0; col--){
+                for(int col = TOUTCHED_COL; col > 0; col--){
                     if(currentStates[TOUTCHED_ROW][col] == LEFT) break;
                     changedStateStack.push(new Pair<Integer, Integer>(TOUTCHED_ROW, col));
                 }
@@ -85,10 +80,10 @@ public class HorizontalBoard extends Board{
         final int CUR_STATE = currentStates[i][j];
         switch (CUR_STATE){
             case LEFT:
-                blockImages[i][j].animate().translationX(-DISTANCE).start();
+                blockViews[i][j].animate().translationX(-(DISTANCE+MARGIN)).start();
                 break;
             case RIGHT:
-                blockImages[i][j].animate().translationX(0).start();
+                blockViews[i][j].animate().translationX(0).start();
 
                 break;
         }
@@ -106,8 +101,8 @@ public class HorizontalBoard extends Board{
     }
 
     private void resetBlocks(int i){
-        scores[i] = 0;
-        for(int j=0;j<BOARD_COL;j++){
+        scores[i] = 1;
+        for(int j=1;j<BOARD_COL;j++){
             if(currentStates[i][j] == RIGHT) break;
             currentStates[i][j] = RIGHT;
             moveBlock(i,j);
@@ -131,12 +126,19 @@ public class HorizontalBoard extends Board{
             resetBlocks(i);
     }
 
-    private void setBlockImage(int i, int j, int imageId){
+    public void setBlockViews(int blockViewsId[][]){
+        for(int i=0;i<BOARD_ROW;i++){
+            for(int j=1;j<BOARD_COL;j++)
+                setBlockView(i,j,blockViewsId[i][j]);
+        }
+    }
+
+    private void setBlockView(int i, int j, int blockId){
         final int constantRowId = i;
         final int constantColId = j;
-        blockImages[i][j] = ((Activity)mContext).findViewById(imageId);
+        blockViews[i][j] = ((Activity)mContext).findViewById(blockId);
 
-        blockImages[i][j].setOnTouchListener(new View.OnTouchListener(){
+        blockViews[i][j].setOnTouchListener(new View.OnTouchListener(){
             int rowId = constantRowId;
             int colId = constantColId;
 
@@ -165,14 +167,10 @@ public class HorizontalBoard extends Board{
         });
     }
 
-    public void setBlockImages(int imageViewsId[][]){
-        for(int i=0;i<BOARD_ROW;i++){
-            for(int j=0;j<BOARD_COL;j++)
-                setBlockImage(i,j,imageViewsId[i][j]);
-        }
-    }
-
-    public void setDistance(int distance) {DISTANCE = distance;};
+    public void setDistance(int distance, int margin) {
+        DISTANCE = distance;
+        MARGIN = margin;
+    };
 
     public void setGuide(boolean flag){ isGuideOn = flag; }
 }
