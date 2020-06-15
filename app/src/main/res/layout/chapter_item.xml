@@ -4,7 +4,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/chapterCardView"
     android:layout_width="match_parent"
-    android:layout_height="154dp"
+    android:layout_height="102dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
     android:clickable="true"
     android:foreground="?android:attr/selectableItemBackground"
 
@@ -12,7 +16,7 @@
     app:cardCornerRadius="64dp"
     app:cardElevation="2dp"
     app:contentPadding="10dp"
-    app:cardUseCompatPadding="true"
+    app:cardUseCompatPadding="false"
     >
     <LinearLayout
         android:orientation="horizontal"
