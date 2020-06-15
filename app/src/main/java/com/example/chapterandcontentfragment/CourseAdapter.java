@@ -73,7 +73,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
                 Intent intent = new Intent(context, ChapterAndContentActivity.class);
                 intent.putExtra(AllinOneContract.Course.COURSE_ID, COURSE_ID);
                 context.startActivity(intent);
-                Toast.makeText(context,"You touched this cardview. Well done.",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context,"You touched this cardview. Well done.",Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -33,7 +33,7 @@ public class DetailFragment extends Fragment {
         Bundle args = new Bundle();
         args.putInt(AllinOneContract.Content.COURSE_ID, courseId);
         args.putInt(AllinOneContract.Content.CHPATER_ID, chapterId);
-        args.putString(AllinOneContract.Chapter.TITLE, chapterTitle);
+        args.putString(AllinOneContract.Chapter.TITLE, chapterId+". "+chapterTitle);
         detailFragment.setArguments(args);
         return detailFragment;
     }

@@ -68,7 +68,7 @@ public class ChapterFragment extends Fragment {
         chapterAdapter.setOnItemClickListener(new ChapterAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
-                Toast.makeText(getActivity(),"Hello. You pushed Chapter "+(position+1)+".",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(),"Hello. You pushed Chapter "+(position+1)+".",Toast.LENGTH_SHORT).show();
 
                 Fragment detailFragment = DetailFragment.newInstance(courseId, position+1, chapterItems.get(position).getTitle());
                 //Bundle args = new Bundle();

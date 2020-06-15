@@ -15,9 +15,12 @@ import java.util.List;
 
 
 public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.ViewHolder> {
+    private int focusPos;
+
     public class ViewHolder extends RecyclerView.ViewHolder{
         TextView numberView;
         TextView titleView;
+
 
         ViewHolder(View itemview){
             super(itemview);
@@ -55,7 +58,9 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
+
+
         ChapterItem chapterItem = chapterItems.get(position);
         TextView numberView = holder.numberView;
         TextView titleView = holder.titleView;
