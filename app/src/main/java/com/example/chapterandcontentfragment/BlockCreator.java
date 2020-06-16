@@ -1,5 +1,6 @@
 package com.example.chapterandcontentfragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.view.Gravity;
@@ -7,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.cardview.widget.CardView;
@@ -107,18 +109,20 @@ public class BlockCreator extends Board {
                 bottomTextView = blockViews[i][j].findViewById(R.id.bottomTextView);
                 ((CardView)blockViews[i][j]).setCardBackgroundColor(palette.getBackgroundColor());
 
-                int weightSum = 10;
-                if(info[i][j][BOTTOM] != null){
-                    bottomTextView.setText(info[i][j][BOTTOM]);
-                    params.weight = 3;
-                    weightSum-=params.weight;
-                    bottomTextView.setLayoutParams(params);
-                }
-                if(info[i][j][TOP] != null){
+                topTextView.setText(info[i][j][TOP]);
+                bottomTextView.setText(info[i][j][BOTTOM]);
+                /*if(info[i][j][TOP] != ""){
                     topTextView.setText(info[i][j][TOP]);
-                    params.weight = weightSum;
+                    params.weight = 0.6f;
                     topTextView.setLayoutParams(params);
                 }
+
+                if(info[i][j][BOTTOM] != ""){
+                    bottomTextView.setText(info[i][j][BOTTOM]);
+                    params.weight = 0.4f;
+                    bottomTextView.setLayoutParams(params);
+
+                }*/
             }
         }
     }

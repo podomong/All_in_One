@@ -88,5 +88,9 @@ public final class AllinOneContract  {
         public static final String COL = "BOARD_COL";
         public static final String TYPE = "BOARD_TYPE";
         public static final String GUIDE_MODE = "BOARD_GUIDE_MODE";
+
+        //columns for detail content
+        public static final String TOP_TEXT = "TOP_TEXT";
+        public static final String BOTTOM_TEXT = "BOTTOM_TEXT";
     }
 }

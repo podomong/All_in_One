@@ -13,10 +13,17 @@ public class BlockInfoReader extends Board {
 
     BlockInfoReader(int boardRow, int boardCol, Context context){
         super(boardRow, boardCol, context);
-        info = new String[boardRow][boardCol][2];
+        info = new String[BOARD_ROW][BOARD_COL][2];
     }
 
-    void makeBlockInfo(int boardType){
+    void makeBlockInfo(int _id, int pos, String info){
+        int y = (_id-1)/BOARD_COL;
+        int x = (_id-1)%BOARD_COL;
+        if(info != null)
+            this.info[y][x][pos] = info;
+    }
+
+    void makeBlocksInfo(int boardType){
         if(boardType == HORIZONTAL){
             int num = 1;
             for(int i=0;i<BOARD_ROW;i++) {
