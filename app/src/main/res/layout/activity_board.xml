@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
     tools:context=".BoardActivity">
-
+    <!--
     <TextView
         android:id="@+id/scoreView"
         android:layout_width="wrap_content"
@@ -20,4 +20,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.063" />
+
+     -->
 </androidx.constraintlayout.widget.ConstraintLayout>

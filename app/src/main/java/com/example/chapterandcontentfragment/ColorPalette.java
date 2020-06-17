@@ -31,6 +31,9 @@ public class ColorPalette extends Board{
     boolean actualBlocksOnBackground[][];
     boolean actualBlocksOnForeground[][];
 
+    private int dummyLineId;
+    private int innerLineId;
+
     ColorPalette(int boardRow, int boardCol, Context context){
         super(boardRow, boardCol, context);
 
@@ -141,7 +144,54 @@ public class ColorPalette extends Board{
         }
     }
 
+    void initBackgroundXML(int boardId){
+        switch (boardId){
+            case 1:
+            case 4:
+            case 5:
+            case 6:
+                dummyLineId = R.layout.block_background_single;
+                innerLineId = R.layout.block_background_single;
+                break;
+
+            case 2:
+            case 3:
+                dummyLineId = R.layout.block_background_double_55_45;
+                innerLineId = R.layout.block_background_double_55_45;
+                break;
+
+            case 7:
+                dummyLineId = R.layout.block_background_double_30_70;
+                innerLineId = R.layout.block_background_single;
+                break;
+
+            case 8:
+            case 9:
+                dummyLineId = R.layout.block_background_single;
+                innerLineId = R.layout.block_background_double_30_70;
+                break;
+
+            case 14:
+            case 15:
+            case 16:
+            case 17:
+                dummyLineId = R.layout.block_background_single;
+                innerLineId = R.layout.block_background_single_fraction;
+                break;
+
+            case 27:
+            case 28:
+                dummyLineId = R.layout.block_background_single;
+                innerLineId = R.layout.block_background_double_60_40_fraction;
+                break;
+        }
+    }
+
     boolean[][] getActualBlocksOnBackground(){return actualBlocksOnBackground;}
 
     boolean[][] getActualBlocksOnForeground(){return actualBlocksOnForeground;}
+
+    int getDummyLineId(){ return dummyLineId; }
+
+    int getInnerLineId(){ return innerLineId; }
 }

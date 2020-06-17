@@ -5,8 +5,6 @@ import android.content.Context;
 import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.TextView;
-
 import java.util.Stack;
 
 public class VerticalBoard extends Board{
@@ -17,7 +15,7 @@ public class VerticalBoard extends Board{
     private View blockViews[][];
     private int scores[];
 
-    private TextView scoreView;
+    //private TextView scoreView;
     private boolean isGuideOn;
     private int carryPos;
     private ColorPalette palette;
@@ -38,7 +36,7 @@ public class VerticalBoard extends Board{
 
         for(int j=0;j<BOARD_COL;j++)
             scores[j] = 0;
-        scoreView = ((Activity)mContext).findViewById(R.id.scoreView);
+        //scoreView = ((Activity)mContext).findViewById(R.id.scoreView);
 
         carryPos = -1;
     }
@@ -160,7 +158,7 @@ public class VerticalBoard extends Board{
                         checkChange(rowId, colId);
                         applyChange();
                         guideMove();
-                        scoreView.setText(Long.toString(calScores()));
+                        //scoreView.setText(Long.toString(calScores()));
                         break;
                     case MotionEvent.ACTION_MOVE:
 

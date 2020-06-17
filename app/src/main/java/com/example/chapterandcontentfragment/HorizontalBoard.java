@@ -17,7 +17,7 @@ public class HorizontalBoard extends Board{
     private View blockViews[][];
     private int scores[];
 
-    private TextView scoreView;
+    //private TextView scoreView;
     private boolean isGuideOn;
     private ColorPalette palette;
 
@@ -37,7 +37,7 @@ public class HorizontalBoard extends Board{
 
         for(int i=0;i<BOARD_ROW;i++)
             scores[i] = 1;
-        scoreView = ((Activity)mContext).findViewById(R.id.scoreView);
+        //scoreView = ((Activity)mContext).findViewById(R.id.scoreView);
     }
 
     private long calScores(){
@@ -153,7 +153,7 @@ public class HorizontalBoard extends Board{
                         checkChange(rowId, colId);
                         applyChange();
                         guideMove(rowId, colId);
-                        scoreView.setText(Long.toString(calScores()));
+                        //scoreView.setText(Long.toString(calScores()));
                         break;
                     case MotionEvent.ACTION_MOVE:
 
