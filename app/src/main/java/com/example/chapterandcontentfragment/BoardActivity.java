@@ -30,6 +30,7 @@ public class BoardActivity extends AppCompatActivity {
     private int MARGIN = 2;
     private int isGuideModeOn;
     private int boardType;
+    private int isColorModeOn;
 
     private BlockInfoReader blockInfoReader;
 
@@ -46,7 +47,6 @@ public class BoardActivity extends AppCompatActivity {
         
         Intent intent = getIntent();
         int detailId = intent.getIntExtra("DETAIL_ID", 0);
-        //Toast.makeText(this, "DETAIL_ID "+detailId,Toast.LENGTH_LONG).show();
         AllinOneDBHelper dbHelper = new AllinOneDBHelper(this);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM "+AllinOneContract.Board.TABLE_NAME,null);
@@ -54,19 +54,22 @@ public class BoardActivity extends AppCompatActivity {
 
         BOARD_ROW = cursor.getInt(cursor.getColumnIndex(AllinOneContract.Board.ROW));
         BOARD_COL = cursor.getInt(cursor.getColumnIndex(AllinOneContract.Board.COL));
-        isGuideModeOn = cursor.getInt(cursor.getInt(cursor.getColumnIndex(AllinOneContract.Board.GUIDE_MODE)));
+        isGuideModeOn = cursor.getInt(cursor.getColumnIndex(AllinOneContract.Board.GUIDE_MODE));
+        isColorModeOn = cursor.getInt(cursor.getColumnIndex(AllinOneContract.Board.COLOR_MODE));
         boardType = cursor.getInt(cursor.getColumnIndex(AllinOneContract.Board.TYPE));
+        System.out.println("guide mode : "+isGuideModeOn+", color mode : "+isColorModeOn);
         cursor.close();
 
         Cursor detailCursor = db.rawQuery("SELECT * FROM "+AllinOneContract.Board.TABLE_NAME+detailId,null);
 
-        if(boardType == HORIZONTAL)
+        if(boardType == BlockCreator.HORIZONTAL || boardType == BlockCreator.HORIZONTAL_STAIR)
             blockInfoReader = new BlockInfoReader(BOARD_ROW, BOARD_COL+1, this);
-        else if(boardType == VERTICAL)
+        else
             blockInfoReader = new BlockInfoReader(BOARD_ROW+1, BOARD_COL, this);
 
         while (detailCursor.moveToNext()){
             int _id = detailCursor.getInt(detailCursor.getColumnIndex(AllinOneContract.Board._ID));
+
             String topText = detailCursor.getString(detailCursor.getColumnIndex(AllinOneContract.Board.TOP_TEXT));
             String bottomText = detailCursor.getString(detailCursor.getColumnIndex(AllinOneContract.Board.BOTTOM_TEXT));
 
@@ -74,10 +77,10 @@ public class BoardActivity extends AppCompatActivity {
             blockInfoReader.makeBlockInfo(_id, BOTTOM, bottomText);
         }
 
-        if(boardType == HORIZONTAL)
-            createHorizontalBoard();
-        else if(boardType == VERTICAL)
-            createVerticalBoard();
+        if(boardType == BlockCreator.HORIZONTAL || boardType == BlockCreator.HORIZONTAL_STAIR)
+            createHorizontalBoard(boardType, isColorModeOn, isGuideModeOn);
+        else
+            createVerticalBoard(boardType,isColorModeOn, isGuideModeOn);
 
 
         detailCursor.close();
@@ -88,13 +91,14 @@ public class BoardActivity extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    void createHorizontalBoard(){
+    void createHorizontalBoard(int curBoardType, int isColorModeOn, int isGuideModeOn){
         /*기기의 화면 크기를 가져옴*/
         Display display = getWindowManager().getDefaultDisplay();
         Point displaySize = new Point();
         display.getSize(displaySize);
-        ColorPalette palette = new ColorPalette();
-        palette.setColorMode(false);
+        ColorPalette palette = new ColorPalette(BOARD_ROW, BOARD_COL+1, this);
+        palette.setColorMode(isColorModeOn);
+        palette.makeActualBlocks(curBoardType);
 
         /*N*M 크기의 백그라운도 보드 생성*/
         BlockCreator backgroundBlocks = new BlockCreator(BOARD_ROW, BOARD_COL+1, this);
@@ -102,8 +106,8 @@ public class BoardActivity extends AppCompatActivity {
         backgroundBlocks.setDisplayHeight(displaySize.y);
         backgroundBlocks.calBlockLength();
         backgroundBlocks.setColorPalette(palette);
-        backgroundBlocks.setBoardType(HORIZONTAL);
-        backgroundBlocks.makeBlocks(R.layout.block_background, blockInfoReader.getInfo());
+        backgroundBlocks.setBoardType(curBoardType);
+        backgroundBlocks.makeBackgroundBlocks(R.layout.block_background, blockInfoReader.getInfo());
 
         BoardCreator backgroundBoard = new BoardCreator(BOARD_ROW, BOARD_COL+1, this);
         backgroundBoard.setBlockViews(backgroundBlocks.getBlockViews());
@@ -116,8 +120,9 @@ public class BoardActivity extends AppCompatActivity {
         foregroundBlocks.setDisplayWidth(displaySize.x);
         foregroundBlocks.setDisplayHeight(displaySize.y);
         foregroundBlocks.calBlockLength();
-        foregroundBlocks.setBoardType(HORIZONTAL);
-        foregroundBlocks.makeBlocks(R.layout.block_foreground, palette);
+        foregroundBlocks.setColorPalette(palette);
+        foregroundBlocks.setBoardType(curBoardType);
+        foregroundBlocks.makeForegroundBlocks(R.layout.block_foreground);
 
         BoardCreator foregroundBoard = new BoardCreator(BOARD_ROW, BOARD_COL+1, this);
         foregroundBoard.setBlockViews(foregroundBlocks.getBlockViews());
@@ -126,19 +131,21 @@ public class BoardActivity extends AppCompatActivity {
         foregroundBoard.constraintBlocks();
 
         HorizontalBoard horizontalBoard = new HorizontalBoard(BOARD_ROW, BOARD_COL+1, this);
+        horizontalBoard.setColorPalette(palette);
         horizontalBoard.setDistance(foregroundBlocks.getBlockLength(), MARGIN);
         horizontalBoard.setBlockViews(foregroundBlocks.getBlockViewsId());
-        //horizontalBoard.setGuide(true);
+        horizontalBoard.setGuide(isGuideModeOn);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    void createVerticalBoard(){
+    void createVerticalBoard(int curBoardType, int isColorModeOn, int isGuideModeOn){
         //기기의 화면 크기를 가져옴
         Display display = getWindowManager().getDefaultDisplay();
         Point displaySize = new Point();
         display.getSize(displaySize);
-        ColorPalette palette = new ColorPalette();
-        palette.setColorMode(false);
+        ColorPalette palette = new ColorPalette(BOARD_ROW+1,BOARD_COL,this);
+        palette.makeActualBlocks(curBoardType);
+        palette.setColorMode(isColorModeOn);
 
         //N*M 크기의 백그라운도 보드 생성 세로
         BlockCreator backgroundBlocks = new BlockCreator(BOARD_ROW+1, BOARD_COL, this);
@@ -146,8 +153,8 @@ public class BoardActivity extends AppCompatActivity {
         backgroundBlocks.setDisplayHeight(displaySize.y);
         backgroundBlocks.calBlockLength();
         backgroundBlocks.setColorPalette(palette);
-        backgroundBlocks.setBoardType(BlockCreator.VERTICAL);
-        backgroundBlocks.makeBlocks(R.layout.block_background,blockInfoReader.getInfo());
+        backgroundBlocks.setBoardType(curBoardType);
+        backgroundBlocks.makeBackgroundBlocks(R.layout.block_background, blockInfoReader.getInfo());
 
         BoardCreator backgroundBoard = new BoardCreator(BOARD_ROW+1, BOARD_COL, this);
         backgroundBoard.setBlockViews(backgroundBlocks.getBlockViews());
@@ -160,8 +167,9 @@ public class BoardActivity extends AppCompatActivity {
         foregroundBlocks.setDisplayWidth(displaySize.x);
         foregroundBlocks.setDisplayHeight(displaySize.y);
         foregroundBlocks.calBlockLength();
-        foregroundBlocks.setBoardType(BlockCreator.VERTICAL);
-        foregroundBlocks.makeBlocks(R.layout.block_foreground, palette);
+        foregroundBlocks.setColorPalette(palette);
+        foregroundBlocks.setBoardType(curBoardType);
+        foregroundBlocks.makeForegroundBlocks(R.layout.block_foreground);
 
         BoardCreator foregroundBoard = new BoardCreator(BOARD_ROW+1, BOARD_COL, this);
         foregroundBoard.setBlockViews(foregroundBlocks.getBlockViews());
@@ -173,6 +181,6 @@ public class BoardActivity extends AppCompatActivity {
         VerticalBoard verticalBoard = new VerticalBoard(BOARD_ROW+1, BOARD_COL, this);
         verticalBoard.setDistance(foregroundBlocks.getBlockLength(), MARGIN);
         verticalBoard.setBlockViews(foregroundBlocks.getBlockViewsId());
-        //verticalBoard.setGuide(true);
+        verticalBoard.setGuide(isGuideModeOn);
     }
 }

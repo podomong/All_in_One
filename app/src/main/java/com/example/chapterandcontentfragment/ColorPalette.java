@@ -1,8 +1,9 @@
 package com.example.chapterandcontentfragment;
 
+import android.content.Context;
 import android.graphics.Color;
 
-public class ColorPalette {
+public class ColorPalette extends Board{
     private int LENGTH = 11;
     static final String TRANSPARENT = "#00000000";
     static final String RED = "#D62E21";
@@ -18,12 +19,21 @@ public class ColorPalette {
     static final String LIGHT_YELLOW = "#F2ECE1";
     static final String WHITE ="#FFFFFF";
 
+    public final int HORIZONTAL = 0;
+    public final int VERTICAL = 1;
+    public final int VERTICAL_UPSIDE_DOWN = 2;
+    public final int HORIZONTAL_STAIR = 3;
+
     int[] colors = new int[LENGTH];
     int backgroundColor;
     int foregroundColor;
     private boolean isColorModeOn = false;
+    boolean actualBlocksOnBackground[][];
+    boolean actualBlocksOnForeground[][];
 
-    ColorPalette(){
+    ColorPalette(int boardRow, int boardCol, Context context){
+        super(boardRow, boardCol, context);
+
         colors[0] = Color.parseColor(TRANSPARENT);
         colors[1] = Color.parseColor(PURPLE);
         colors[2] = Color.parseColor(INDIGO);
@@ -38,6 +48,9 @@ public class ColorPalette {
 
         backgroundColor = Color.parseColor(LIGHT_YELLOW);
         foregroundColor = Color.parseColor(WHITE);
+
+        actualBlocksOnBackground = new boolean[boardRow][boardCol];
+        actualBlocksOnForeground = new boolean[boardRow][boardCol];
     }
     void setColor(int i, int color){
         colors[i] = color;
@@ -47,11 +60,88 @@ public class ColorPalette {
         return colors[i];
     }
 
-    void setColorMode(boolean flag){isColorModeOn = flag;}
+    void setColorMode(int flag){
+        if(flag == 0)
+            isColorModeOn = false;
+        else
+            isColorModeOn = true;
+    }
     boolean isColorModeOn(){return isColorModeOn;}
 
     int getBackgroundColor(){return backgroundColor;}
     int getForegroundColor(){return foregroundColor;}
 
     int[] getPaltette(){return colors;}
+
+    boolean isActualBlock(int groundType, int i, int j){
+        if(groundType == 0)
+            return actualBlocksOnBackground[i][j];
+        else
+            return actualBlocksOnForeground[i][j];
+    }
+
+    void makeActualBlocks(int boardType){
+
+        switch (boardType){
+            case HORIZONTAL:
+                for(int i=0;i<BOARD_ROW;i++){
+                    for(int j=0;j<BOARD_COL;j++) {
+                        actualBlocksOnBackground[i][j] = true;
+                        if(j>0)
+                            actualBlocksOnForeground[i][j] = true;
+                        else
+                            actualBlocksOnForeground[i][j] = false;
+                    }
+                }
+
+                break;
+
+            case VERTICAL:
+                for(int i=0;i<BOARD_ROW;i++) {
+                    for (int j = 0; j < BOARD_COL; j++) {
+                        actualBlocksOnBackground[i][j] = true;
+                        if (i > 0)
+                            actualBlocksOnForeground[i][j] = true;
+                        else
+                            actualBlocksOnForeground[i][j] = false;
+                    }
+                }
+
+                break;
+            case VERTICAL_UPSIDE_DOWN:
+                for(int i=0;i<BOARD_ROW;i++){
+                    for(int j=0;j<BOARD_COL;j++){
+                        actualBlocksOnBackground[i][j] = true;
+                        if(i<BOARD_ROW-1)
+                            actualBlocksOnForeground[i][j] = true;
+                        else
+                            actualBlocksOnForeground[i][j] = false;
+                    }
+                }
+
+                break;
+            case HORIZONTAL_STAIR:
+                for(int i=0;i<BOARD_ROW;i++){
+                    for(int j=0;j<BOARD_COL;j++){
+                        actualBlocksOnBackground[i][j] = false;
+                        actualBlocksOnForeground[i][j] = false;
+                    }
+                }
+
+                final int BASE = 3;
+                for(int i = 0; i<BOARD_COL-BASE+1;i++){
+                    for(int j=0;j<BASE+i;j++){
+                        actualBlocksOnBackground[i][j] = true;
+                        if(j>0)
+                            actualBlocksOnForeground[i][j] = true;
+                    }
+                }
+
+                break;
+        }
+    }
+
+    boolean[][] getActualBlocksOnBackground(){return actualBlocksOnBackground;}
+
+    boolean[][] getActualBlocksOnForeground(){return actualBlocksOnForeground;}
 }

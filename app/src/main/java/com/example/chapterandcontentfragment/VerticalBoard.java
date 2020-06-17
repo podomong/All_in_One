@@ -20,6 +20,7 @@ public class VerticalBoard extends Board{
     private TextView scoreView;
     private boolean isGuideOn;
     private int carryPos;
+    private ColorPalette palette;
 
     VerticalBoard(int boardRow, int boardCol, Context context){
         super(boardRow, boardCol, context);
@@ -135,8 +136,11 @@ public class VerticalBoard extends Board{
 
     public void setBlockViews(int blockViewsId[][]){
         for(int i=1;i<BOARD_ROW;i++){
-            for(int j=0;j<BOARD_COL;j++)
-                setBlockView(i,j,blockViewsId[i][j]);
+            for(int j=0;j<BOARD_COL;j++){
+                if(palette.isActualBlock(BlockCreator.FOREGROUND, i,j))
+                    setBlockView(i,j,blockViewsId[i][j]);
+            }
+
         }
     }
 
@@ -179,5 +183,14 @@ public class VerticalBoard extends Board{
         MARGIN = margin;
     };
 
-    public void setGuide(boolean flag){ isGuideOn = flag; }
+    public void setGuide(int flag){
+        if(flag == 0)
+            isGuideOn = false;
+        else
+            isGuideOn = true;
+    }
+
+    void setColorPalette(ColorPalette palette){
+        this.palette= palette;
+    }
 }

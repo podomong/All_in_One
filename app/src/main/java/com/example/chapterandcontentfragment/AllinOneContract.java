@@ -88,6 +88,7 @@ public final class AllinOneContract  {
         public static final String COL = "BOARD_COL";
         public static final String TYPE = "BOARD_TYPE";
         public static final String GUIDE_MODE = "BOARD_GUIDE_MODE";
+        public static final String COLOR_MODE = "BOARD_COLOR_MODE";
 
         //columns for detail content
         public static final String TOP_TEXT = "TOP_TEXT";
