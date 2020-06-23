@@ -26,7 +26,10 @@
             android:layout_gravity="center_vertical"
             android:fontFamily="@font/cookie_run_regular"
             android:textColor="@color/colorBrightYellow"
-            android:textSize="32sp"/>
+            android:textSize="32sp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="1sp"
+            />
 
         <TextView
             android:id="@+id/contentInstruction"
@@ -36,6 +39,9 @@
             android:paddingLeft="10dp"
             android:fontFamily="@font/cookie_run_regular"
             android:textColor="@color/colorBrightYellow"
-            android:textSize="24sp"/>
+            android:textSize="24sp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="1sp"
+            />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

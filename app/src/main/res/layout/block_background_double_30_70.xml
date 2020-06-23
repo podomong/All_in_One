@@ -9,6 +9,7 @@
     >
 
     <LinearLayout
+        android:id="@+id/block_layout"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:orientation="vertical"
@@ -24,6 +25,7 @@
             android:fontFamily="@font/cookie_run_regular"
             android:textColor="@color/colorChocolate"
             android:textSize="24sp"
+            android:autoSizeMinTextSize="1sp"
             android:layout_weight="0.35"
             android:autoSizeTextType="uniform"
             />
@@ -38,6 +40,7 @@
             android:fontFamily="@font/cookie_run_regular"
             android:textColor="@color/colorChocolate"
             android:textSize="24sp"
+            android:autoSizeMinTextSize="1sp"
             android:layout_weight="0.65"
             android:autoSizeTextType="uniform"/>
     </LinearLayout>

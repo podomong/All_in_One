@@ -9,6 +9,7 @@
     >
 
     <LinearLayout
+        android:id="@+id/block_layout"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:orientation="vertical"
@@ -25,6 +26,7 @@
             android:textSize="24sp"
             android:layout_weight="0.6"
             android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="1sp"
             />
 
         <TextView
@@ -36,7 +38,8 @@
             android:textColor="@color/colorChocolate"
             android:textSize="24sp"
             android:layout_weight="0.4"
-            android:autoSizeTextType="uniform"/>
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="1sp"/>
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

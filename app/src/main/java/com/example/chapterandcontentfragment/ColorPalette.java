@@ -150,6 +150,13 @@ public class ColorPalette extends Board{
             case 4:
             case 5:
             case 6:
+            case 10:
+            case 11:
+            case 12:
+            case 13:
+            case 29:
+            case 30:
+            case 31:
                 dummyLineId = R.layout.block_background_single;
                 innerLineId = R.layout.block_background_single;
                 break;
@@ -171,10 +178,21 @@ public class ColorPalette extends Board{
                 innerLineId = R.layout.block_background_double_30_70;
                 break;
 
+
+
             case 14:
             case 15:
             case 16:
             case 17:
+            case 18:
+            case 19:
+            case 20:
+            case 21:
+            case 22:
+            case 23:
+            case 24:
+            case 25:
+            case 26:
                 dummyLineId = R.layout.block_background_single;
                 innerLineId = R.layout.block_background_single_fraction;
                 break;

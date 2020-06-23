@@ -40,7 +40,10 @@
             android:paddingTop="5dp"
             android:fontFamily="@font/cookie_run_bold"
             android:textColor="@color/colorChocolate"
-            android:textSize="24sp" />
+            android:textSize="24sp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="1sp"
+            />
 
         <TextView
             android:id="@+id/instructionView"
@@ -49,6 +52,9 @@
             android:paddingTop="5dp"
             android:fontFamily="@font/cookie_run_regular"
             android:textColor="@color/colorChocolate"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="1sp"
+            />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

@@ -2,12 +2,14 @@ package com.example.chapterandcontentfragment;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -15,6 +17,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -29,6 +32,7 @@ import java.util.ArrayList;
 public class CourseActivity extends AppCompatActivity {
     ArrayList<CourseItem>courseItems= new ArrayList<CourseItem>();
 
+    @RequiresApi(api = Build.VERSION_CODES.P)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,34 +61,38 @@ public class CourseActivity extends AppCompatActivity {
         db.close();
         dbHelper.close();
 
-
-
         RecyclerView recyclerView = findViewById(R.id.courseRecyclerView);
         CourseAdapter adapter = new CourseAdapter(courseItems, this);
         recyclerView.setAdapter(adapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         recyclerView.setLayoutManager(linearLayoutManager);
-
     }
 
-    private static void createDB(Context context){
-        String appDataPath = context.getApplicationInfo().dataDir;
-        File dbFolder = new File(appDataPath + "/databases");
-        dbFolder.mkdir();
-        File dbFilePath = new File(appDataPath + "/databases/"+AllinOneDBHelper.DATABASE_NAME);
+    private void createDB(Context context){
+        SharedPreferences prefs = getSharedPreferences("Pref", MODE_PRIVATE);
+        boolean isFirstRun = prefs.getBoolean("isFirstRun",true);
 
-        try {
-            InputStream inputStream = context.getAssets().open(AllinOneDBHelper.DATABASE_NAME);
-            OutputStream outputStream = new FileOutputStream(dbFilePath);
-            byte[] buffer = new byte[1024];
-            int length;
-            while ((length = inputStream.read(buffer))>0)
-                outputStream.write(buffer, 0, length);
+        if(isFirstRun){
+            System.out.println("First Run and Database created");
+            String appDataPath = context.getApplicationInfo().dataDir;
+            File dbFolder = new File(appDataPath + "/databases");
+            dbFolder.mkdir();
+            File dbFilePath = new File(appDataPath + "/databases/"+AllinOneDBHelper.DATABASE_NAME);
 
-            outputStream.flush();
-            outputStream.close();
-            inputStream.close();
-        } catch (IOException e){ }
+            try {
+                InputStream inputStream = context.getAssets().open(AllinOneDBHelper.DATABASE_NAME);
+                OutputStream outputStream = new FileOutputStream(dbFilePath);
+                byte[] buffer = new byte[1024];
+                int length;
+                while ((length = inputStream.read(buffer))>0)
+                    outputStream.write(buffer, 0, length);
+
+                outputStream.flush();
+                outputStream.close();
+                inputStream.close();
+            } catch (IOException e){ }
+            prefs.edit().putBoolean("isFirstRun",false).apply();
+        }
     }
 }

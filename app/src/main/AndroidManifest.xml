@@ -21,4 +21,8 @@
         <activity android:name=".BoardActivity"/>
     </application>
 
+
+
+
+
 </manifest>

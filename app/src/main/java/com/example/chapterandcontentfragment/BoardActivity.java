@@ -52,31 +52,29 @@ public class BoardActivity extends AppCompatActivity {
         System.out.println("guide mode : "+isGuideModeOn+", color mode : "+isColorModeOn);
         cursor.close();
 
-        if(boardType == BlockCreator.HORIZONTAL || boardType == BlockCreator.HORIZONTAL_STAIR){
-            Cursor detailCursor = db.rawQuery("SELECT * FROM "+AllinOneContract.Board.TABLE_NAME+boardId,null);
+        Cursor detailCursor = db.rawQuery("SELECT * FROM "+AllinOneContract.Board.TABLE_NAME+boardId,null);
 
-            if(boardType == BlockCreator.HORIZONTAL || boardType == BlockCreator.HORIZONTAL_STAIR)
-                blockInfoReader = new BlockInfoReader(BOARD_ROW, BOARD_COL+1, this);
-            else
-                blockInfoReader = new BlockInfoReader(BOARD_ROW+1, BOARD_COL, this);
+        if(boardType == BlockCreator.HORIZONTAL || boardType == BlockCreator.HORIZONTAL_STAIR)
+            blockInfoReader = new BlockInfoReader(BOARD_ROW, BOARD_COL+1, this);
+        else
+            blockInfoReader = new BlockInfoReader(BOARD_ROW+1, BOARD_COL, this);
 
-            while (detailCursor.moveToNext()){
-                int _id = detailCursor.getInt(detailCursor.getColumnIndex(AllinOneContract.Board._ID));
+        while (detailCursor.moveToNext()){
+            int _id = detailCursor.getInt(detailCursor.getColumnIndex(AllinOneContract.Board._ID));
 
-                String topText = detailCursor.getString(detailCursor.getColumnIndex(AllinOneContract.Board.TOP_TEXT));
-                String bottomText = detailCursor.getString(detailCursor.getColumnIndex(AllinOneContract.Board.BOTTOM_TEXT));
+            String topText = detailCursor.getString(detailCursor.getColumnIndex(AllinOneContract.Board.TOP_TEXT));
+            String bottomText = detailCursor.getString(detailCursor.getColumnIndex(AllinOneContract.Board.BOTTOM_TEXT));
 
-                blockInfoReader.makeBlockInfo(_id, TOP, topText);
-                blockInfoReader.makeBlockInfo(_id, BOTTOM, bottomText);
-            }
-
-            if(boardType == BlockCreator.HORIZONTAL || boardType == BlockCreator.HORIZONTAL_STAIR)
-                createHorizontalBoard(boardId, boardType, isColorModeOn, isGuideModeOn);
-            //else
-            //createVerticalBoard(boardId, boardType,isColorModeOn, isGuideModeOn);
-            detailCursor.close();
+            blockInfoReader.makeBlockInfo(_id, TOP, topText);
+            blockInfoReader.makeBlockInfo(_id, BOTTOM, bottomText);
         }
 
+        if(boardType == BlockCreator.HORIZONTAL || boardType == BlockCreator.HORIZONTAL_STAIR)
+            createHorizontalBoard(boardId, boardType, isColorModeOn, isGuideModeOn);
+        else
+            createVerticalBoard(boardId, boardType,isColorModeOn, isGuideModeOn);
+
+        detailCursor.close();
         db.close();
         dbHelper.close();
 

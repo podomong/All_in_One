@@ -5,6 +5,8 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,10 +24,6 @@ public class BlockCreator extends Board {
 
     static final int BACKGROUND = 0;
     static final int FOREGROUND = 1;
-
-    private int dummyLineId;
-    private int innerLineId;
-
 
     private int DISPLAY_WIDTH;
     private int DISPLAY_HEIGHT;
@@ -81,9 +79,10 @@ public class BlockCreator extends Board {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     void makeBackgroundBlocks(int boardId, String info[][][]){
         TextView topTextView, bottomTextView;
+         LinearLayout linearLayout;
 
-        //분수인 경우우
-        if((14 <=boardId && boardId <= 17) || (27 <= boardId && boardId <= 28)){
+        //분수인 경우
+        if((14 <=boardId && boardId <= 17) || (18 <= boardId && boardId <= 28)){
             Typeface typeface = Typeface.createFromAsset(
                     mContext.getAssets(), "nutso2.ttf"
             );
@@ -95,9 +94,12 @@ public class BlockCreator extends Board {
                     else
                         blockViews[i][j] = LayoutInflater.from(mContext).inflate(palette.getInnerLineId(), null, true);
                     blockViews[i][j].setId(View.generateViewId());
+
+                    linearLayout = blockViews[i][j].findViewById(R.id.block_layout);
+                    linearLayout.getLayoutParams().height = LENGTH;
+                    linearLayout.getLayoutParams().width = LENGTH;
+                    linearLayout.requestLayout();
                     blockViewsId[i][j] = blockViews[i][j].getId();
-
-
 
                     topTextView = blockViews[i][j].findViewById(R.id.topTextView);
                     bottomTextView = blockViews[i][j].findViewById(R.id.bottomTextView);
@@ -107,10 +109,6 @@ public class BlockCreator extends Board {
                     else
                         ((CardView)blockViews[i][j]).setCardBackgroundColor(palette.getColor(0));
                     ((CardView)blockViews[i][j]).setCardElevation(0f);
-
-
-
-
 
                     if(topTextView != null && info[i][j][TOP] != null){
                         topTextView.setText(info[i][j][TOP]);
@@ -137,6 +135,11 @@ public class BlockCreator extends Board {
                     blockViews[i][j].setId(View.generateViewId());
                     blockViewsId[i][j] = blockViews[i][j].getId();
 
+                    linearLayout = blockViews[i][j].findViewById(R.id.block_layout);
+                    linearLayout.getLayoutParams().height = LENGTH;
+                    linearLayout.getLayoutParams().width = LENGTH;
+                    linearLayout.requestLayout();
+
                     topTextView = blockViews[i][j].findViewById(R.id.topTextView);
                     bottomTextView = blockViews[i][j].findViewById(R.id.bottomTextView);
 
@@ -153,26 +156,6 @@ public class BlockCreator extends Board {
                 }
             }
         }
-
-
-
-        /*for(int i=0;i<BOARD_ROW;i++){
-            for(int j=0;j<BOARD_COL;j++){
-                topTextView = blockViews[i][j].findViewById(R.id.topTextView);
-                bottomTextView = blockViews[i][j].findViewById(R.id.bottomTextView);
-
-                if(palette.isActualBlock(BACKGROUND, i, j))
-                    ((CardView)blockViews[i][j]).setCardBackgroundColor(palette.getBackgroundColor());
-                else
-                    ((CardView)blockViews[i][j]).setCardBackgroundColor(palette.getColor(0));
-                ((CardView)blockViews[i][j]).setCardElevation(0f);
-
-                if(topTextView != null)
-                    topTextView.setText(info[i][j][TOP]);
-                if(bottomTextView != null)
-                    bottomTextView.setText(info[i][j][BOTTOM]);
-            }
-        }*/
     }
 
     void calBlockLength(){ LENGTH = (int)(DISPLAY_WIDTH*BLOCK_SIZE_RATE); }
