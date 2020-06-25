@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/chapterCardView"
     android:layout_width="match_parent"
-    android:layout_height="90dp"
+    android:layout_height="102dp"
     android:layout_marginLeft="10dp"
     android:layout_marginRight="10dp"
     android:layout_marginTop="5dp"
@@ -31,20 +31,18 @@
             android:fontFamily="@font/cookie_run_bold"
             android:textColor="@color/colorBrightYellow"
             android:textSize="32sp"
-            android:autoSizeTextType="uniform"
-            android:autoSizeMinTextSize="1sp"
+
             />
         <TextView
             android:id="@+id/chapterTitle"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:breakStrategy="simple"
+
             android:layout_gravity="center_vertical"
             android:fontFamily="@font/cookie_run_bold"
             android:textColor="@color/colorBrightYellow"
             android:textSize="32sp"
-            android:autoSizeTextType="uniform"
-            android:autoSizeMinTextSize="1sp"
+
             />
 
     </LinearLayout>

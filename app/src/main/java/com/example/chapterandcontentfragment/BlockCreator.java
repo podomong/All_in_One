@@ -79,7 +79,7 @@ public class BlockCreator extends Board {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     void makeBackgroundBlocks(int boardId, String info[][][]){
         TextView topTextView, bottomTextView;
-         LinearLayout linearLayout;
+        LinearLayout linearLayout;
 
         //분수인 경우
         if((14 <=boardId && boardId <= 17) || (18 <= boardId && boardId <= 28)){
