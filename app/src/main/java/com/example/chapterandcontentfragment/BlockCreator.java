@@ -87,7 +87,7 @@ public class BlockCreator extends Board {
 
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    void makeBackgroundBlocks(int boardId, String info[][][]){
+    void makeBackgroundBlocks(int boardId, String info[][][], int backgroundColorIndex){
         TextView topTextView, bottomTextView;
         LinearLayout linearLayout;
 
@@ -104,6 +104,7 @@ public class BlockCreator extends Board {
                     else
                         blockViews[i][j] = LayoutInflater.from(mContext).inflate(palette.getInnerLineId(), null, true);
                     blockViews[i][j].setId(View.generateViewId());
+                    //blockViews[i][j].setBackgroundColor(palette.getBackgroundColor(backgroundColorIndex));
 
                     linearLayout = blockViews[i][j].findViewById(R.id.block_layout);
                     linearLayout.getLayoutParams().height = LENGTH;
@@ -111,11 +112,12 @@ public class BlockCreator extends Board {
                     linearLayout.requestLayout();
                     blockViewsId[i][j] = blockViews[i][j].getId();
 
+
                     topTextView = blockViews[i][j].findViewById(R.id.topTextView);
                     bottomTextView = blockViews[i][j].findViewById(R.id.bottomTextView);
 
                     if(palette.isActualBlock(BACKGROUND, i, j))
-                        ((CardView)blockViews[i][j]).setCardBackgroundColor(palette.getBackgroundColor());
+                        ((CardView)blockViews[i][j]).setCardBackgroundColor(palette.getBackgroundColor(backgroundColorIndex));
                     else
                         ((CardView)blockViews[i][j]).setCardBackgroundColor(palette.getColor(0));
                     ((CardView)blockViews[i][j]).setCardElevation(0f);
@@ -144,6 +146,7 @@ public class BlockCreator extends Board {
                         blockViews[i][j] = LayoutInflater.from(mContext).inflate(palette.getInnerLineId(), null, true);
                     blockViews[i][j].setId(View.generateViewId());
                     blockViewsId[i][j] = blockViews[i][j].getId();
+                    //blockViews[i][j].setBackgroundColor(palette.getBackgroundColor(backgroundColorIndex));
 
                     linearLayout = blockViews[i][j].findViewById(R.id.block_layout);
                     linearLayout.getLayoutParams().height = LENGTH;
@@ -154,7 +157,7 @@ public class BlockCreator extends Board {
                     bottomTextView = blockViews[i][j].findViewById(R.id.bottomTextView);
 
                     if(palette.isActualBlock(BACKGROUND, i, j))
-                        ((CardView)blockViews[i][j]).setCardBackgroundColor(palette.getBackgroundColor());
+                        ((CardView)blockViews[i][j]).setCardBackgroundColor(palette.getBackgroundColor(backgroundColorIndex));
                     else
                         ((CardView)blockViews[i][j]).setCardBackgroundColor(palette.getColor(0));
                     ((CardView)blockViews[i][j]).setCardElevation(0f);

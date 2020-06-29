@@ -34,7 +34,7 @@ public class BaseBar {
                 for(int j=0;j<BOARD_COL;j++){
                     baseBar[j] = new View(context);
                     baseBar[j].setId(View.generateViewId());
-                    baseBar[j].setBackgroundColor(Color.parseColor(ColorPalette.BLUE));
+                    baseBar[j].setBackgroundColor(Color.parseColor(ColorPalette.BASE_LINE_COLOR));
                 }
                 break;
 
@@ -44,7 +44,7 @@ public class BaseBar {
                 for(int i=0;i<BOARD_ROW;i++){
                     baseBar[i] = new View(context);
                     baseBar[i].setId(View.generateViewId());
-                    baseBar[i].setBackgroundColor(Color.parseColor(ColorPalette.BLUE));
+                    baseBar[i].setBackgroundColor(Color.parseColor(ColorPalette.BASE_LINE_COLOR));
                 }
                 break;
         }

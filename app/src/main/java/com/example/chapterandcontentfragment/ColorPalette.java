@@ -19,6 +19,20 @@ public class ColorPalette extends Board{
     static final String LIGHT_YELLOW = "#F2ECE1";
     static final String WHITE ="#FFFFFF";
 
+    static final String BACKGROUND_COLOR01 = "#FDDDE0";
+    static final String BACKGROUND_COLOR02 = "#BBD1A2";
+    static final String BACKGROUND_COLOR03 = "#F7DDC2";
+    static final String BACKGROUND_COLOR04 = "#FDEDAF";
+    static final String BACKGROUND_COLOR05 = "#E5EDDA";
+    static final String BACKGROUND_COLOR06 = "#E5EDD9";
+    static final String BACKGROUND_COLOR07 = "#C1DBD3";
+    static final String BACKGROUND_COLOR08 = "#F8B5BB";
+    static final String BACKGROUND_COLOR09 = "#B1DAEC";
+    static final String BACKGROUND_COLOR10 = "#6DB9E5";
+    static final String BACKGROUND_COLOR11 = "#C8C0DB";
+
+    static final String BASE_LINE_COLOR = "#2E75B5";
+
     public final int HORIZONTAL = 0;
     public final int VERTICAL = 1;
     public final int VERTICAL_UPSIDE_DOWN = 2;
@@ -203,6 +217,24 @@ public class ColorPalette extends Board{
                 innerLineId = R.layout.block_background_double_60_40_fraction;
                 break;
         }
+    }
+
+    int getBackgroundColor(int index){
+        int colorCode = 0;
+        switch (index){
+            case 1: colorCode = Color.parseColor(BACKGROUND_COLOR01); break;
+            case 2: colorCode = Color.parseColor(BACKGROUND_COLOR02); break;
+            case 3: colorCode = Color.parseColor(BACKGROUND_COLOR03); break;
+            case 4: colorCode = Color.parseColor(BACKGROUND_COLOR04); break;
+            case 5: colorCode = Color.parseColor(BACKGROUND_COLOR05); break;
+            case 6: colorCode = Color.parseColor(BACKGROUND_COLOR06); break;
+            case 7: colorCode = Color.parseColor(BACKGROUND_COLOR07); break;
+            case 8: colorCode = Color.parseColor(BACKGROUND_COLOR08); break;
+            case 9: colorCode = Color.parseColor(BACKGROUND_COLOR09); break;
+            case 10: colorCode = Color.parseColor(BACKGROUND_COLOR10); break;
+            case 11: colorCode = Color.parseColor(BACKGROUND_COLOR11); break;
+        }
+        return colorCode;
     }
 
     boolean[][] getActualBlocksOnBackground(){return actualBlocksOnBackground;}

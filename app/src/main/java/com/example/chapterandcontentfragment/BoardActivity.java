@@ -27,7 +27,7 @@ public class BoardActivity extends AppCompatActivity {
     private int MARGIN = 2;
     private int isGuideModeOn;
     private int boardType;
-    private int isColorModeOn;
+    private int backgroundColorIndex;
     private int boardNum;
 
     private BlockCreator[] backgroundBlocks = new BlockCreator[2];
@@ -66,7 +66,7 @@ public class BoardActivity extends AppCompatActivity {
         BOARD_ROW = cursor.getInt(cursor.getColumnIndex(AllinOneContract.Board.ROW));
         BOARD_COL = cursor.getInt(cursor.getColumnIndex(AllinOneContract.Board.COL));
         isGuideModeOn = cursor.getInt(cursor.getColumnIndex(AllinOneContract.Board.GUIDE_MODE));
-        isColorModeOn = cursor.getInt(cursor.getColumnIndex(AllinOneContract.Board.COLOR_MODE));
+        backgroundColorIndex = cursor.getInt(cursor.getColumnIndex(AllinOneContract.Board.COLOR_MODE));
         boardType = cursor.getInt(cursor.getColumnIndex(AllinOneContract.Board.TYPE));
         boardNum = cursor.getInt(cursor.getColumnIndex(AllinOneContract.Board.NUM));
         //System.out.println("guide mode : "+isGuideModeOn+", color mode : "+isColorModeOn);
@@ -90,7 +90,6 @@ public class BoardActivity extends AppCompatActivity {
             blockInfoReader.makeBlockInfo(_id, BOTTOM, bottomText);
         }
 
-        /**/
         button = findViewById(R.id.button);
         topFrame = findViewById(R.id.topFrame);
         bottomFrame = findViewById(R.id.bottomFrame);
@@ -100,14 +99,14 @@ public class BoardActivity extends AppCompatActivity {
             switch (boardType){
                 case BlockCreator.HORIZONTAL:
                 case BlockCreator.HORIZONTAL_STAIR:
-                    createHorizontalBoard(boardId,R.id.topFrame, boardType, BoardCreator.TOP_BOARD, isColorModeOn, isGuideModeOn);
-                    createHorizontalBoard(boardId,R.id.bottomFrame, boardType, BoardCreator.BOTTOM_BOARD, isColorModeOn, isGuideModeOn);
+                    createHorizontalBoard(boardId,R.id.topFrame, boardType, BoardCreator.TOP_BOARD, backgroundColorIndex, isGuideModeOn);
+                    createHorizontalBoard(boardId,R.id.bottomFrame, boardType, BoardCreator.BOTTOM_BOARD, backgroundColorIndex, isGuideModeOn);
                     smallerToLarger();
                     break;
                 case BlockCreator.VERTICAL:
                 case BlockCreator.VERTICAL_UPSIDE_DOWN:
-                    createVerticalBoard(boardId,R.id.topFrame, boardType, BoardCreator.TOP_BOARD, isColorModeOn, isGuideModeOn);
-                    createVerticalBoard(boardId,R.id.bottomFrame, boardType, BoardCreator.BOTTOM_BOARD, isColorModeOn, isGuideModeOn);
+                    createVerticalBoard(boardId,R.id.topFrame, boardType, BoardCreator.TOP_BOARD, backgroundColorIndex, isGuideModeOn);
+                    createVerticalBoard(boardId,R.id.bottomFrame, boardType, BoardCreator.BOTTOM_BOARD, backgroundColorIndex, isGuideModeOn);
                     smallerToLarger();
                     break;
             }
@@ -120,18 +119,21 @@ public class BoardActivity extends AppCompatActivity {
                         case BlockCreator.SMALLER:
                             smallerToLarger();
                             curScale = BlockCreator.LARGER;
+                            button.setText("2개판");
                             if(boardNum>=3)
                                 getSupportActionBar().show();
                             break;
                         case BlockCreator.LARGER:
                             largerToSmaller();
                             curScale = BlockCreator.SMALLER;
+                            button.setText("1개판");
                             if(boardNum>=3)
                                 getSupportActionBar().hide();
                             break;
                     }
                 }
             });
+
         }
         else{
             disableBottomViews();
@@ -139,67 +141,14 @@ public class BoardActivity extends AppCompatActivity {
             switch (boardType){
                 case BlockCreator.HORIZONTAL:
                 case BlockCreator.HORIZONTAL_STAIR:
-                    createHorizontalBoard(boardId,R.id.topFrame, boardType, BoardCreator.TOP_BOARD, isColorModeOn, isGuideModeOn);
+                    createHorizontalBoard(boardId,R.id.topFrame, boardType, BoardCreator.TOP_BOARD, backgroundColorIndex, isGuideModeOn);
                     break;
                 case BlockCreator.VERTICAL:
                 case BlockCreator.VERTICAL_UPSIDE_DOWN:
-                    createVerticalBoard(boardId,R.id.topFrame, boardType, BoardCreator.TOP_BOARD, isColorModeOn, isGuideModeOn);
+                    createVerticalBoard(boardId,R.id.topFrame, boardType, BoardCreator.TOP_BOARD, backgroundColorIndex, isGuideModeOn);
                     break;
             }
         }
-
-        /*if(boardType == BlockCreator.HORIZONTAL || boardType == BlockCreator.HORIZONTAL_STAIR){
-            createHorizontalBoard(boardId,R.id.topFrame, boardType, BoardCreator.TOP_BOARD, isColorModeOn, isGuideModeOn);
-            createHorizontalBoard(boardId,R.id.bottomFrame, boardType, BoardCreator.BOTTOM_BOARD, isColorModeOn, isGuideModeOn);
-
-            smallerToLarger();
-            button.setOnClickListener(new View.OnClickListener() {
-                int curScale = BlockCreator.LARGER;
-                @Override
-                public void onClick(View v) {
-                    switch (curScale){
-                        case BlockCreator.SMALLER:
-                            smallerToLarger();
-                            curScale = BlockCreator.LARGER;
-                            //getSupportActionBar().show();
-                            break;
-                        case BlockCreator.LARGER:
-                            largerToSmaller();
-                            curScale = BlockCreator.SMALLER;
-                            //getSupportActionBar().hide();
-                            break;
-                    }
-                }
-            });
-        }
-
-        else{
-            createVerticalBoard(boardId,R.id.topFrame, boardType, BoardCreator.TOP_BOARD, isColorModeOn, isGuideModeOn);
-            createVerticalBoard(boardId,R.id.bottomFrame, boardType, BoardCreator.BOTTOM_BOARD, isColorModeOn, isGuideModeOn);
-
-            smallerToLarger();
-            button.setOnClickListener(new View.OnClickListener() {
-                int curScale = BlockCreator.LARGER;
-                @Override
-                public void onClick(View v) {
-                    switch (curScale){
-                        case BlockCreator.SMALLER:
-                            smallerToLarger();
-                            getSupportActionBar().show();
-                            curScale = BlockCreator.LARGER;
-                            break;
-                        case BlockCreator.LARGER:
-                            largerToSmaller();
-                            getSupportActionBar().hide();
-                            curScale = BlockCreator.SMALLER;
-                            break;
-                    }
-                }
-            });
-        }*/
-
-        /**/
-
 
         detailCursor.close();
         db.close();
@@ -207,13 +156,16 @@ public class BoardActivity extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.P)
-    void createHorizontalBoard(int boardId, int guideId, int curBoardType, int curBoardPos, int isColorModeOn, int isGuideModeOn){
+    void createHorizontalBoard(int boardId, int guideId, int curBoardType, int curBoardPos, int backgroundColorIndex, int isGuideModeOn){
         /*기기의 화면 크기를 가져옴*/
         Display display = getWindowManager().getDefaultDisplay();
         Point displaySize = new Point();
         display.getSize(displaySize);
         ColorPalette palette = new ColorPalette(BOARD_ROW, BOARD_COL+1, this);
-        palette.setColorMode(isColorModeOn);
+        if(boardId != 11)
+            palette.setColorMode(0);
+        else
+            palette.setColorMode(1);
         palette.makeActualBlocks(curBoardType);
         palette.initBackgroundXML(boardId);
 
@@ -225,7 +177,7 @@ public class BoardActivity extends AppCompatActivity {
         backgroundBlocks.calBlockLength();
         backgroundBlocks.setColorPalette(palette);
         backgroundBlocks.setBoardType(curBoardType);
-        backgroundBlocks.makeBackgroundBlocks(boardId, blockInfoReader.getInfo());
+        backgroundBlocks.makeBackgroundBlocks(boardId, blockInfoReader.getInfo(), backgroundColorIndex);
 
         BaseBar backgroundBaseBar = new BaseBar(BOARD_ROW, BOARD_COL+1, this);
         backgroundBaseBar.setBoardType(boardType);
@@ -278,14 +230,17 @@ public class BoardActivity extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.P)
-    void createVerticalBoard(int boardId,int guideId, int curBoardType, int curBoardPos,int isColorModeOn, int isGuideModeOn){
+    void createVerticalBoard(int boardId,int guideId, int curBoardType, int curBoardPos,int backgroundColorIndex, int isGuideModeOn){
         //기기의 화면 크기를 가져옴
         Display display = getWindowManager().getDefaultDisplay();
         Point displaySize = new Point();
         display.getSize(displaySize);
         ColorPalette palette = new ColorPalette(BOARD_ROW+1,BOARD_COL,this);
         palette.makeActualBlocks(curBoardType);
-        palette.setColorMode(isColorModeOn);
+        if(boardId != 11)
+            palette.setColorMode(0);
+        else
+            palette.setColorMode(1);
         palette.initBackgroundXML(boardId);
 
         //N*M 크기의 백그라운도 보드 생성 세로
@@ -296,7 +251,7 @@ public class BoardActivity extends AppCompatActivity {
         backgroundBlocks.calBlockLength();
         backgroundBlocks.setColorPalette(palette);
         backgroundBlocks.setBoardType(curBoardType);
-        backgroundBlocks.makeBackgroundBlocks(boardId, blockInfoReader.getInfo());
+        backgroundBlocks.makeBackgroundBlocks(boardId, blockInfoReader.getInfo(), backgroundColorIndex);
 
         BaseBar backgroundBaseBar = new BaseBar(BOARD_ROW, BOARD_COL+1, this);
         backgroundBaseBar.setBoardType(boardType);
