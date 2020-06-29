@@ -41,7 +41,6 @@ public class CourseActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-
         createDB(this);
 
         AllinOneDBHelper dbHelper = new AllinOneDBHelper(this);
@@ -69,7 +68,7 @@ public class CourseActivity extends AppCompatActivity {
         //recyclerView.setLayoutManager(linearLayoutManager);
 
         Handler handler = new Handler();
-        handler.postDelayed(new SplashHandler(), 1000);
+        handler.postDelayed(new SplashHandler(), 1500);
     }
 
     private class SplashHandler implements Runnable{
@@ -106,5 +105,6 @@ public class CourseActivity extends AppCompatActivity {
             } catch (IOException e){ }
             prefs.edit().putBoolean("isFirstRun",false).apply();
         }
+
     }
 }

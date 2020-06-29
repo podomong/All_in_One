@@ -30,7 +30,7 @@ public class BlockCreator extends Board {
 
     private int DISPLAY_WIDTH;
     private int DISPLAY_HEIGHT;
-    private double BLOCK_SIZE_RATE = 0.060; //default rate = 0.075
+    private double BLOCK_SIZE_RATE = 0.060; //default rate = 0.075, 0.060
     private int LENGTH;
 
     private View[][] blockViews;
@@ -203,6 +203,13 @@ public class BlockCreator extends Board {
                     blockViews[i][j].setVisibility(View.VISIBLE);
             }
         }
+    }
+
+    void setBlockSizeRate(int boardNum){
+        if(boardNum>=2)
+            BLOCK_SIZE_RATE = 0.060;
+        else
+            BLOCK_SIZE_RATE = 0.075;
     }
 
     void setBoardType(int boardType){curBoardType = boardType;}

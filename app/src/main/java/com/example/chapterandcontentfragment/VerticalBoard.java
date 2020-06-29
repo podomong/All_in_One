@@ -177,7 +177,7 @@ public class VerticalBoard extends Board{
     }
 
     public void setBlockViews(int blockViewsId[][]){
-        for(int i=1;i<BOARD_ROW;i++){
+        for(int i=0;i<BOARD_ROW;i++){
             for(int j=0;j<BOARD_COL;j++){
                 if(actualBlocks[i][j])
                     setBlockView(i,j,blockViewsId[i][j]);
