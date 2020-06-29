@@ -115,7 +115,26 @@ public class BoardActivity extends AppCompatActivity {
         }
 
         else{
-            //createVerticalBoard(boardId, boardType,isColorModeOn, isGuideModeOn);
+            createVerticalBoard(boardId,R.id.topFrame, boardType, BoardCreator.TOP_BOARD, isColorModeOn, isGuideModeOn);
+            createVerticalBoard(boardId,R.id.bottomFrame, boardType, BoardCreator.BOTTOM_BOARD, isColorModeOn, isGuideModeOn);
+
+            smallerToLarger();
+            button.setOnClickListener(new View.OnClickListener() {
+                int curScale = BlockCreator.LARGER;
+                @Override
+                public void onClick(View v) {
+                    switch (curScale){
+                        case BlockCreator.SMALLER:
+                            smallerToLarger();
+                            curScale = BlockCreator.LARGER;
+                            break;
+                        case BlockCreator.LARGER:
+                            largerToSmaller();
+                            curScale = BlockCreator.SMALLER;
+                            break;
+                    }
+                }
+            });
         }
 
         /**/
@@ -179,8 +198,8 @@ public class BoardActivity extends AppCompatActivity {
         this.horizontalBoard[curBoardPos] = horizontalBoard;
     }
 
-    /*@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    void createVerticalBoard(int boardId, int curBoardType, int isColorModeOn, int isGuideModeOn){
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    void createVerticalBoard(int boardId,int guideId, int curBoardType, int curBoardPos,int isColorModeOn, int isGuideModeOn){
         //기기의 화면 크기를 가져옴
         Display display = getWindowManager().getDefaultDisplay();
         Point displaySize = new Point();
@@ -203,7 +222,7 @@ public class BoardActivity extends AppCompatActivity {
         backgroundBoard.setBlockViews(backgroundBlocks.getBlockViews());
         backgroundBoard.setMargin(MARGIN);
         backgroundBoard.initConstraint(R.id.constraintLayout);
-        backgroundBoard.constraintBlocks();
+        backgroundBoard.constraintBlocks(guideId);
 
         //N*M 크기의 포그라운드 보드 생성 세로
         BlockCreator foregroundBlocks = new BlockCreator(BOARD_ROW+1, BOARD_COL, this);
@@ -218,15 +237,22 @@ public class BoardActivity extends AppCompatActivity {
         foregroundBoard.setBlockViews(foregroundBlocks.getBlockViews());
         foregroundBoard.setMargin(MARGIN);
         foregroundBoard.initConstraint(R.id.constraintLayout);
-        foregroundBoard.constraintBlocks();
+        foregroundBoard.constraintBlocks(guideId);
 
         //생성된 블럭 이미지에 터치 이벤트 및 이동 애니메이션 설정
-        VerticalBoard verticalBoard = new VerticalBoard(BOARD_ROW+1, BOARD_COL, this);
-        verticalBoard.setColorPalette(palette);
+        VerticalBoard verticalBoard = new VerticalBoard(BOARD_ROW+1, BOARD_COL, this,palette.getActualBlocksOnForeground());
+        verticalBoard.setCurBoardType(boardType);
+        //verticalBoard.setColorPalette(palette);
         verticalBoard.setDistance(foregroundBlocks.getBlockLength(), MARGIN);
         verticalBoard.setBlockViews(foregroundBlocks.getBlockViewsId());
-        verticalBoard.setGuide(isGuideModeOn);
-    }*/
+        //verticalBoard.setGuide(0);
+
+        this.backgroundBlocks[curBoardPos] = backgroundBlocks;
+        this.backgroundBoard[curBoardPos] = backgroundBoard;
+        this.foregroundBlocks[curBoardPos] = foregroundBlocks;
+        this.foregroundBoard[curBoardPos] = foregroundBoard;
+        this.verticalBoard[curBoardPos] = verticalBoard;
+    }
 
     void smallerToLarger(){
         foregroundBoard[BoardCreator.TOP_BOARD].detachFromBaseLine();
@@ -242,7 +268,7 @@ public class BoardActivity extends AppCompatActivity {
         backgroundBlocks[BoardCreator.BOTTOM_BOARD].toggleBlocksVisibility();
         foregroundBlocks[BoardCreator.BOTTOM_BOARD].toggleBlocksVisibility();
 
-        /*if(verticalBoard[BoardCreator.TOP_BOARD] != null){
+        if(verticalBoard[BoardCreator.TOP_BOARD] != null){
             verticalBoard[BoardCreator.TOP_BOARD].setGap(backgroundBlocks[BoardCreator.TOP_BOARD].getBlockLength(), MARGIN);
             verticalBoard[BoardCreator.TOP_BOARD].resetBlocks();
         }
@@ -250,7 +276,7 @@ public class BoardActivity extends AppCompatActivity {
         if(verticalBoard[BoardCreator.BOTTOM_BOARD] != null){
             verticalBoard[BoardCreator.BOTTOM_BOARD].setGap(backgroundBlocks[BoardCreator.BOTTOM_BOARD].getBlockLength(), MARGIN);
             verticalBoard[BoardCreator.BOTTOM_BOARD].resetBlocks();
-        }*/
+        }
 
         if(horizontalBoard[BoardCreator.TOP_BOARD]!=null){
             horizontalBoard[BoardCreator.TOP_BOARD].setGap(backgroundBlocks[BoardCreator.TOP_BOARD].getBlockLength(), MARGIN);
@@ -277,7 +303,7 @@ public class BoardActivity extends AppCompatActivity {
         foregroundBoard[BoardCreator.TOP_BOARD].attachToBaseLine(BoardCreator.TOP_BOARD);
         backgroundBoard[BoardCreator.TOP_BOARD].attachToBaseLine(BoardCreator.TOP_BOARD);
 
-        /*if(verticalBoard[BoardCreator.TOP_BOARD] != null){
+        if(verticalBoard[BoardCreator.TOP_BOARD] != null){
             verticalBoard[BoardCreator.TOP_BOARD].setGap(backgroundBlocks[BoardCreator.TOP_BOARD].getBlockLength(), MARGIN);
             verticalBoard[BoardCreator.TOP_BOARD].resetBlocks();
         }
@@ -285,7 +311,7 @@ public class BoardActivity extends AppCompatActivity {
         if(verticalBoard[BoardCreator.BOTTOM_BOARD] != null){
             verticalBoard[BoardCreator.BOTTOM_BOARD].setGap(backgroundBlocks[BoardCreator.BOTTOM_BOARD].getBlockLength(), MARGIN);
             verticalBoard[BoardCreator.BOTTOM_BOARD].resetBlocks();
-        }*/
+        }
 
         if(horizontalBoard[BoardCreator.TOP_BOARD] != null){
             horizontalBoard[BoardCreator.TOP_BOARD].setGap(backgroundBlocks[BoardCreator.TOP_BOARD].getBlockLength(), MARGIN);

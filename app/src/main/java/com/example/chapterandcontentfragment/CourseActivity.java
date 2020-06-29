@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -19,6 +20,7 @@ import android.graphics.ColorFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -36,11 +38,9 @@ public class CourseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_course);
-
+        setContentView(R.layout.activity_splash);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        getSupportActionBar().setCustomView(R.layout.custom_bar);
+
 
         createDB(this);
 
@@ -61,12 +61,24 @@ public class CourseActivity extends AppCompatActivity {
         db.close();
         dbHelper.close();
 
-        RecyclerView recyclerView = findViewById(R.id.courseRecyclerView);
-        CourseAdapter adapter = new CourseAdapter(courseItems, this);
-        recyclerView.setAdapter(adapter);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        recyclerView.setLayoutManager(linearLayoutManager);
+        //RecyclerView recyclerView = findViewById(R.id.courseRecyclerView);
+        //CourseAdapter adapter = new CourseAdapter(courseItems, this);
+        //recyclerView.setAdapter(adapter);
+        //LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        //linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        //recyclerView.setLayoutManager(linearLayoutManager);
+
+        Handler handler = new Handler();
+        handler.postDelayed(new SplashHandler(), 1000);
+    }
+
+    private class SplashHandler implements Runnable{
+        public void run(){
+            Intent intent = new Intent(CourseActivity.this, ChapterAndContentActivity.class);
+            intent.putExtra(AllinOneContract.Course.COURSE_ID, 1);
+            startActivity(intent);
+            CourseActivity.this.finish();
+        }
     }
 
     private void createDB(Context context){

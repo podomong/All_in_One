@@ -21,8 +21,10 @@ public class VerticalBoard extends Board{
     private boolean isGuideOn;
     private int carryPos;
     private ColorPalette palette;
+    boolean actualBlocks[][];
+    int curBoardType;
 
-    VerticalBoard(int boardRow, int boardCol, Context context){
+    VerticalBoard(int boardRow, int boardCol, Context context, boolean actualBlocks[][]){
         super(boardRow, boardCol, context);
 
         changedStateStack = new Stack<Pair<Integer, Integer>>();
@@ -30,10 +32,12 @@ public class VerticalBoard extends Board{
         blockViews = new View[BOARD_ROW][BOARD_COL];
         scores = new int[BOARD_COL];
         isGuideOn = false;
+        this.actualBlocks = actualBlocks;
 
-        for(int i=1;i<BOARD_ROW;i++){
+        for(int i=0;i<BOARD_ROW;i++){
             for(int j=0;j<BOARD_COL;j++)
-                currentStates[i][j] = DOWN;
+                if(actualBlocks[i][j])
+                    currentStates[i][j] = DOWN;
         }
 
         for(int j=0;j<BOARD_COL;j++)
@@ -54,19 +58,41 @@ public class VerticalBoard extends Board{
     }
 
     private void checkChange(final int TOUTCHED_ROW, final int TOUTCHED_COL){
-        switch (currentStates[TOUTCHED_ROW][TOUTCHED_COL]){
-            case DOWN:
-                for(int row = TOUTCHED_ROW; row > 0; row--){
-                    if(currentStates[row][TOUTCHED_COL] == UP) break;
-                    changedStateStack.push(new Pair<Integer, Integer>(row, TOUTCHED_COL));
-                }
-                break;
-            case UP:
-                for(int row = TOUTCHED_ROW; row < BOARD_ROW; row++){
-                    if(currentStates[row][TOUTCHED_COL] == DOWN) break;
-                    changedStateStack.push(new Pair<Integer, Integer>(row, TOUTCHED_COL));
-                }
-                break;
+        if(curBoardType == BlockCreator.VERTICAL){
+            switch (currentStates[TOUTCHED_ROW][TOUTCHED_COL]){
+                case DOWN:
+                    for(int row = TOUTCHED_ROW; row >= 0; row--){
+                        if(!actualBlocks[row][TOUTCHED_COL]) break;
+                        if(currentStates[row][TOUTCHED_COL] == UP) break;
+                        changedStateStack.push(new Pair<Integer, Integer>(row, TOUTCHED_COL));
+                    }
+                    break;
+                case UP:
+                    for(int row = TOUTCHED_ROW; row < BOARD_ROW; row++){
+                        if(!actualBlocks[row][TOUTCHED_COL]) break;
+                        if(currentStates[row][TOUTCHED_COL] == DOWN) break;
+                        changedStateStack.push(new Pair<Integer, Integer>(row, TOUTCHED_COL));
+                    }
+                    break;
+            }
+        }
+        else{
+            switch (currentStates[TOUTCHED_ROW][TOUTCHED_COL]){
+                case DOWN:
+                    for(int row = TOUTCHED_ROW; row < BOARD_ROW; row++){
+                        if(!actualBlocks[row][TOUTCHED_COL]) break;
+                        if(currentStates[row][TOUTCHED_COL] == UP) break;
+                        changedStateStack.push(new Pair<Integer, Integer>(row, TOUTCHED_COL));
+                    }
+                    break;
+                case UP:
+                    for(int row = TOUTCHED_ROW; row >= 0; row--){
+                        if(!actualBlocks[row][TOUTCHED_COL]) break;
+                        if(currentStates[row][TOUTCHED_COL] == DOWN) break;
+                        changedStateStack.push(new Pair<Integer, Integer>(row, TOUTCHED_COL));
+                    }
+                    break;
+            }
         }
     }
 
@@ -92,7 +118,7 @@ public class VerticalBoard extends Board{
                 blockViews[i][j].animate().translationY(0).start();
                 break;
             case UP:
-                blockViews[i][j].animate().translationY(-(DISTANCE+MARGIN)).start();
+                blockViews[i][j].animate().translationY(GAP).start();
                 break;
         }
     }
@@ -117,6 +143,22 @@ public class VerticalBoard extends Board{
         }
     }
 
+    void resetBlocks(){
+        for(int i=0;i<BOARD_ROW;i++){
+            for(int j=0;j<BOARD_COL;j++){
+                if(actualBlocks[i][j]){
+                    currentStates[i][j] = DOWN;
+                    moveBlock(i,j);
+                }
+            }
+        }
+
+        for(int j=0;j<BOARD_COL;j++)
+            scores[j] = 0;
+
+        carryPos = -1;
+    }
+
     private void guideMove(){
         if(!isGuideOn || carryPos == -1) return;
         for(int j=carryPos;j>=0;j--){
@@ -137,7 +179,7 @@ public class VerticalBoard extends Board{
     public void setBlockViews(int blockViewsId[][]){
         for(int i=1;i<BOARD_ROW;i++){
             for(int j=0;j<BOARD_COL;j++){
-                if(palette.isActualBlock(BlockCreator.FOREGROUND, i,j))
+                if(actualBlocks[i][j])
                     setBlockView(i,j,blockViewsId[i][j]);
             }
 
@@ -183,6 +225,16 @@ public class VerticalBoard extends Board{
         MARGIN = margin;
     };
 
+    public void setGap(int distance, int margin) {
+        DISTANCE = distance;
+        MARGIN = margin;
+
+        if(curBoardType == BlockCreator.VERTICAL)
+            GAP = -(DISTANCE+MARGIN);
+        else
+            GAP = (DISTANCE+MARGIN);
+    };
+
     public void setGuide(int flag){
         if(flag == 0)
             isGuideOn = false;
@@ -192,5 +244,9 @@ public class VerticalBoard extends Board{
 
     void setColorPalette(ColorPalette palette){
         this.palette= palette;
+    }
+
+    public void setCurBoardType(int boardType){
+        curBoardType = boardType;
     }
 }
