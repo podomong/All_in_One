@@ -25,6 +25,9 @@ public class BoardCreator extends Board {
     private View[][] blockViews;
     private int[][] blockViewsId;
 
+    private int boardType;
+    private BaseBar baseBars;
+
     BoardCreator(int boardRow, int boardCol, Context context){
         super(boardRow, boardCol, context);
         blockViews = new View[BOARD_ROW][BOARD_COL];
@@ -54,7 +57,69 @@ public class BoardCreator extends Board {
     }
 
     void setBlockViews(View[][] blockViews){
-        this.blockViews = blockViews;
+        this.blockViews = new View[blockViews.length][blockViews[0].length];
+        for(int i=0;i<BOARD_ROW;i++){
+            for(int j=0;j<BOARD_COL;j++)
+                this.blockViews[i][j] = blockViews[i][j];
+
+        }
+    }
+
+    void setBaseBar(int boardType, BaseBar baseBars){
+        this.boardType = boardType;
+        this.baseBars = baseBars;
+
+        View tempBlockViews[][];
+
+        switch (boardType){
+            case BlockCreator.VERTICAL:
+            case BlockCreator.VERTICAL_UPSIDE_DOWN:
+                tempBlockViews = new View[BOARD_ROW+1][BOARD_COL];
+                break;
+            case BlockCreator.HORIZONTAL:
+            case BlockCreator.HORIZONTAL_STAIR:
+                tempBlockViews = new View[BOARD_ROW][BOARD_COL+1];
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + boardType);
+        }
+
+        switch (boardType){
+
+            case BlockCreator.VERTICAL:
+                for(int j=0;j<BOARD_COL;j++)
+                    tempBlockViews[0][j] = baseBars.getBaseBar(j);
+                for(int i=0;i<BOARD_ROW;i++){
+                    for(int j=0;j<BOARD_COL;j++)
+                        tempBlockViews[i+1][j] = blockViews[i][j];
+                }
+                break;
+
+            case BlockCreator.VERTICAL_UPSIDE_DOWN:
+                for(int j=0;j<BOARD_COL;j++)
+                    tempBlockViews[BOARD_ROW][j] = baseBars.getBaseBar(j);
+                for(int i=0;i<BOARD_ROW;i++){
+                    for(int j=0;j<BOARD_COL;j++)
+                        tempBlockViews[i][j] = blockViews[i][j];
+                }
+                break;
+
+            case BlockCreator.HORIZONTAL:
+            case BlockCreator.HORIZONTAL_STAIR:
+                for(int i = 0;i<BOARD_ROW;i++)
+                    tempBlockViews[i][0] = baseBars.getBaseBar(i);
+                for(int i=0;i<BOARD_ROW;i++){
+                    for(int j=0;j<BOARD_COL;j++)
+                        tempBlockViews[i][j+1] = blockViews[i][j];
+                }
+                break;
+        }
+
+
+        blockViews = tempBlockViews;
+
+        BOARD_ROW = blockViews.length;
+        BOARD_COL = blockViews[0].length;
     }
 
     void setBlockViewsId(int[][] blockViewsId){
@@ -75,8 +140,8 @@ public class BoardCreator extends Board {
                 curViewId = blockViews[i][j].getId();
                 idInHorizontalChain[j] = curViewId;
 
-                controller.constrainWidth(curViewId, ConstraintSet.WRAP_CONTENT);
-                controller.constrainHeight(curViewId, ConstraintSet.WRAP_CONTENT);
+                controller.constrainWidth(curViewId, blockViews[i][j].getLayoutParams().width);
+                controller.constrainHeight(curViewId, blockViews[i][j].getLayoutParams().height);
             }
 
             controller.createHorizontalChain(
@@ -106,11 +171,38 @@ public class BoardCreator extends Board {
         }
 
         for(int i=0;i<BOARD_ROW;i++){
-
             for(int j=0;j<BOARD_COL;j++){
                 curViewId = blockViews[i][j].getId();
-                controller.setMargin(curViewId, ConstraintSet.START, MARGIN);
-                controller.setMargin(curViewId, ConstraintSet.TOP, MARGIN);
+                switch (boardType){
+                    case BlockCreator.VERTICAL:
+                        if(i!=0){
+                            controller.setMargin(curViewId, ConstraintSet.START, MARGIN);
+                            controller.setMargin(curViewId, ConstraintSet.TOP, MARGIN);
+                        }
+                        else if(j == 0)
+                            controller.setMargin(curViewId, ConstraintSet.START, MARGIN);
+                        break;
+
+                    case BlockCreator.VERTICAL_UPSIDE_DOWN:
+                        if(i!=BOARD_ROW-1){
+                            controller.setMargin(curViewId, ConstraintSet.START, MARGIN);
+                            controller.setMargin(curViewId, ConstraintSet.TOP, MARGIN);
+                        }
+                        else if(j == 0)
+                            controller.setMargin(curViewId, ConstraintSet.START, MARGIN);
+                        break;
+
+                    case BlockCreator.HORIZONTAL:
+                    case BlockCreator.HORIZONTAL_STAIR:
+                        if(j!=0){
+                            controller.setMargin(curViewId, ConstraintSet.START, MARGIN);
+                            controller.setMargin(curViewId, ConstraintSet.TOP, MARGIN);
+                        }
+                        else if(i == 0)
+                            controller.setMargin(curViewId, ConstraintSet.TOP, MARGIN);
+
+                        break;
+                }
 
             }
         }

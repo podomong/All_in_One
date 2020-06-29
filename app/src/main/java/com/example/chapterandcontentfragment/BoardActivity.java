@@ -35,6 +35,9 @@ public class BoardActivity extends AppCompatActivity {
     private BoardCreator[] foregroundBoard = new BoardCreator[2];
     private VerticalBoard[] verticalBoard = new VerticalBoard[2];
     private HorizontalBoard[] horizontalBoard = new HorizontalBoard[2];
+    private BaseBar[] backgroundBaseBar = new BaseBar[2];
+    private BaseBar[] foregroundBaseBar = new BaseBar[2];
+
     private LinearLayout unitBar;
 
     private Button button;
@@ -104,10 +107,12 @@ public class BoardActivity extends AppCompatActivity {
                         case BlockCreator.SMALLER:
                             smallerToLarger();
                             curScale = BlockCreator.LARGER;
+                            //getSupportActionBar().show();
                             break;
                         case BlockCreator.LARGER:
                             largerToSmaller();
                             curScale = BlockCreator.SMALLER;
+                            //getSupportActionBar().hide();
                             break;
                     }
                 }
@@ -126,10 +131,12 @@ public class BoardActivity extends AppCompatActivity {
                     switch (curScale){
                         case BlockCreator.SMALLER:
                             smallerToLarger();
+                            getSupportActionBar().show();
                             curScale = BlockCreator.LARGER;
                             break;
                         case BlockCreator.LARGER:
                             largerToSmaller();
+                            getSupportActionBar().hide();
                             curScale = BlockCreator.SMALLER;
                             break;
                     }
@@ -165,8 +172,15 @@ public class BoardActivity extends AppCompatActivity {
         backgroundBlocks.setBoardType(curBoardType);
         backgroundBlocks.makeBackgroundBlocks(boardId, blockInfoReader.getInfo());
 
+        BaseBar backgroundBaseBar = new BaseBar(BOARD_ROW, BOARD_COL+1, this);
+        backgroundBaseBar.setBoardType(boardType);
+        backgroundBaseBar.initBaseBar();
+        backgroundBaseBar.setLength(backgroundBlocks.getBlockLength(),MARGIN);
+        backgroundBaseBar.calBarLength();
+
         BoardCreator backgroundBoard = new BoardCreator(BOARD_ROW, BOARD_COL+1, this);
         backgroundBoard.setBlockViews(backgroundBlocks.getBlockViews());
+        backgroundBoard.setBaseBar(boardType, backgroundBaseBar);
         backgroundBoard.setMargin(MARGIN);
         backgroundBoard.initConstraint(R.id.constraintLayout);
         backgroundBoard.constraintBlocks(guideId);
@@ -180,8 +194,15 @@ public class BoardActivity extends AppCompatActivity {
         foregroundBlocks.setBoardType(curBoardType);
         foregroundBlocks.makeForegroundBlocks();
 
+        BaseBar foregroundBaseBar = new BaseBar(BOARD_ROW, BOARD_COL+1, this);
+        foregroundBaseBar.setBoardType(boardType);
+        foregroundBaseBar.initBaseBar();
+        foregroundBaseBar.setLength(backgroundBlocks.getBlockLength(),MARGIN);
+        foregroundBaseBar.calBarLength();
+
         BoardCreator foregroundBoard = new BoardCreator(BOARD_ROW, BOARD_COL+1, this);
         foregroundBoard.setBlockViews(foregroundBlocks.getBlockViews());
+        foregroundBoard.setBaseBar(boardType, foregroundBaseBar);
         foregroundBoard.setMargin(MARGIN);
         foregroundBoard.initConstraint(R.id.constraintLayout);
         foregroundBoard.constraintBlocks(guideId);
@@ -193,8 +214,10 @@ public class BoardActivity extends AppCompatActivity {
 
         this.backgroundBlocks[curBoardPos] = backgroundBlocks;
         this.backgroundBoard[curBoardPos] = backgroundBoard;
+        this.backgroundBaseBar[curBoardPos] = backgroundBaseBar;
         this.foregroundBlocks[curBoardPos] = foregroundBlocks;
         this.foregroundBoard[curBoardPos] = foregroundBoard;
+        this.foregroundBaseBar[curBoardPos] = foregroundBaseBar;
         this.horizontalBoard[curBoardPos] = horizontalBoard;
     }
 
@@ -218,8 +241,15 @@ public class BoardActivity extends AppCompatActivity {
         backgroundBlocks.setBoardType(curBoardType);
         backgroundBlocks.makeBackgroundBlocks(boardId, blockInfoReader.getInfo());
 
+        BaseBar backgroundBaseBar = new BaseBar(BOARD_ROW, BOARD_COL+1, this);
+        backgroundBaseBar.setBoardType(boardType);
+        backgroundBaseBar.initBaseBar();
+        backgroundBaseBar.setLength(backgroundBlocks.getBlockLength(),MARGIN);
+        backgroundBaseBar.calBarLength();
+
         BoardCreator backgroundBoard = new BoardCreator(BOARD_ROW+1, BOARD_COL, this);
         backgroundBoard.setBlockViews(backgroundBlocks.getBlockViews());
+        backgroundBoard.setBaseBar(boardType, backgroundBaseBar);
         backgroundBoard.setMargin(MARGIN);
         backgroundBoard.initConstraint(R.id.constraintLayout);
         backgroundBoard.constraintBlocks(guideId);
@@ -233,8 +263,15 @@ public class BoardActivity extends AppCompatActivity {
         foregroundBlocks.setBoardType(curBoardType);
         foregroundBlocks.makeForegroundBlocks();
 
+        BaseBar foregroundBaseBar = new BaseBar(BOARD_ROW, BOARD_COL+1, this);
+        foregroundBaseBar.setBoardType(boardType);
+        foregroundBaseBar.initBaseBar();
+        foregroundBaseBar.setLength(backgroundBlocks.getBlockLength(),MARGIN);
+        foregroundBaseBar.calBarLength();
+
         BoardCreator foregroundBoard = new BoardCreator(BOARD_ROW+1, BOARD_COL, this);
         foregroundBoard.setBlockViews(foregroundBlocks.getBlockViews());
+        foregroundBoard.setBaseBar(boardType, foregroundBaseBar);
         foregroundBoard.setMargin(MARGIN);
         foregroundBoard.initConstraint(R.id.constraintLayout);
         foregroundBoard.constraintBlocks(guideId);
@@ -249,8 +286,10 @@ public class BoardActivity extends AppCompatActivity {
 
         this.backgroundBlocks[curBoardPos] = backgroundBlocks;
         this.backgroundBoard[curBoardPos] = backgroundBoard;
+        this.backgroundBaseBar[curBoardPos] = backgroundBaseBar;
         this.foregroundBlocks[curBoardPos] = foregroundBlocks;
         this.foregroundBoard[curBoardPos] = foregroundBoard;
+        this.foregroundBaseBar[curBoardPos] = foregroundBaseBar;
         this.verticalBoard[curBoardPos] = verticalBoard;
     }
 
@@ -262,11 +301,15 @@ public class BoardActivity extends AppCompatActivity {
 
         backgroundBlocks[BoardCreator.TOP_BOARD].changeBlocksScale(BlockCreator.LARGER);
         foregroundBlocks[BoardCreator.TOP_BOARD].changeBlocksScale(BlockCreator.LARGER);
+        backgroundBaseBar[BoardCreator.TOP_BOARD].changeBarLength(backgroundBlocks[BoardCreator.TOP_BOARD].getBlockLength());
+        foregroundBaseBar[BoardCreator.TOP_BOARD].changeBarLength(foregroundBlocks[BoardCreator.TOP_BOARD].getBlockLength());
 
         bottomFrame.setVisibility(View.GONE);
         unitBar.setVisibility(View.GONE);
         backgroundBlocks[BoardCreator.BOTTOM_BOARD].toggleBlocksVisibility();
         foregroundBlocks[BoardCreator.BOTTOM_BOARD].toggleBlocksVisibility();
+        backgroundBaseBar[BoardCreator.BOTTOM_BOARD].toggleBarVisibility();
+        foregroundBaseBar[BoardCreator.BOTTOM_BOARD].toggleBarVisibility();
 
         if(verticalBoard[BoardCreator.TOP_BOARD] != null){
             verticalBoard[BoardCreator.TOP_BOARD].setGap(backgroundBlocks[BoardCreator.TOP_BOARD].getBlockLength(), MARGIN);
@@ -292,11 +335,15 @@ public class BoardActivity extends AppCompatActivity {
     void largerToSmaller(){
         backgroundBlocks[BoardCreator.TOP_BOARD].changeBlocksScale(BlockCreator.SMALLER);
         foregroundBlocks[BoardCreator.TOP_BOARD].changeBlocksScale(BlockCreator.SMALLER);
+        backgroundBaseBar[BoardCreator.TOP_BOARD].changeBarLength(backgroundBlocks[BoardCreator.TOP_BOARD].getBlockLength());
+        foregroundBaseBar[BoardCreator.TOP_BOARD].changeBarLength(foregroundBlocks[BoardCreator.TOP_BOARD].getBlockLength());
 
         bottomFrame.setVisibility(View.VISIBLE);
         unitBar.setVisibility(View.VISIBLE);
         backgroundBlocks[BoardCreator.BOTTOM_BOARD].toggleBlocksVisibility();
         foregroundBlocks[BoardCreator.BOTTOM_BOARD].toggleBlocksVisibility();
+        backgroundBaseBar[BoardCreator.BOTTOM_BOARD].toggleBarVisibility();
+        foregroundBaseBar[BoardCreator.BOTTOM_BOARD].toggleBarVisibility();
 
         foregroundBoard[BoardCreator.BOTTOM_BOARD].attachToBaseLine(BoardCreator.BOTTOM_BOARD);
         backgroundBoard[BoardCreator.BOTTOM_BOARD].attachToBaseLine(BoardCreator.BOTTOM_BOARD);
