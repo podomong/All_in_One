@@ -25,9 +25,12 @@ public class BlockCreator extends Board {
     static final int BACKGROUND = 0;
     static final int FOREGROUND = 1;
 
+    static final int SMALLER = 0;
+    static final int LARGER = 1;
+
     private int DISPLAY_WIDTH;
     private int DISPLAY_HEIGHT;
-    private double BLOCK_SIZE_RATE = 0.075; //default rate = 0.082
+    private double BLOCK_SIZE_RATE = 0.060; //default rate = 0.075
     private int LENGTH;
 
     private View[][] blockViews;
@@ -35,6 +38,7 @@ public class BlockCreator extends Board {
 
     private ColorPalette palette;
     private int curBoardType;
+    private int curScale = LARGER;
 
     BlockCreator(int boardRow, int boardCol, Context context){
         super(boardRow, boardCol, context);
@@ -46,12 +50,18 @@ public class BlockCreator extends Board {
     /*이미지의 최대 크기를 지정해 블럭 이미지들을 생성함*/
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     void makeForegroundBlocks(){
+        LinearLayout linearLayout;
 
         for(int i=0;i<BOARD_ROW;i++){
             for(int j=0;j<BOARD_COL;j++){
                 blockViews[i][j] = LayoutInflater.from(mContext).inflate(R.layout.block_foreground, null, true);
                 blockViews[i][j].setId(View.generateViewId());
                 blockViewsId[i][j] = blockViews[i][j].getId();
+
+                linearLayout = blockViews[i][j].findViewById(R.id.block_layout);
+                linearLayout.getLayoutParams().height = LENGTH;
+                linearLayout.getLayoutParams().width = LENGTH;
+                linearLayout.requestLayout();
 
                 if(palette.isActualBlock(FOREGROUND, i, j)){
                     if(palette.isColorModeOn()){
@@ -69,8 +79,8 @@ public class BlockCreator extends Board {
                     ((CardView)blockViews[i][j]).setCardElevation(0f);
                 }
 
-                blockViews[i][j].setMinimumWidth(LENGTH);
-                blockViews[i][j].setMinimumHeight(LENGTH);
+                //blockViews[i][j].setMinimumWidth(LENGTH);
+                //blockViews[i][j].setMinimumHeight(LENGTH);
             }
         }
     }
@@ -159,6 +169,41 @@ public class BlockCreator extends Board {
     }
 
     void calBlockLength(){ LENGTH = (int)(DISPLAY_WIDTH*BLOCK_SIZE_RATE); }
+
+    void changeBlocksScale(int scale){
+        curScale = scale;
+        switch (curScale){
+            case SMALLER:
+                BLOCK_SIZE_RATE = 0.060;
+                break;
+            case LARGER:
+                BLOCK_SIZE_RATE = 0.075;
+                break;
+        }
+
+        calBlockLength();
+
+        LinearLayout linearLayout;
+        for(int i=0;i<BOARD_ROW;i++){
+            for(int j=0;j<BOARD_COL;j++){
+                linearLayout = blockViews[i][j].findViewById(R.id.block_layout);
+                linearLayout.getLayoutParams().height = LENGTH;
+                linearLayout.getLayoutParams().width = LENGTH;
+                linearLayout.requestLayout();
+            }
+        }
+    }
+
+    void toggleBlocksVisibility(){
+        for(int i=0;i<BOARD_ROW;i++){
+            for(int j=0;j<BOARD_COL;j++){
+                if(blockViews[i][j].getVisibility() == View.VISIBLE)
+                    blockViews[i][j].setVisibility(View.GONE);
+                else
+                    blockViews[i][j].setVisibility(View.VISIBLE);
+            }
+        }
+    }
 
     void setBoardType(int boardType){curBoardType = boardType;}
 

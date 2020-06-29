@@ -7,6 +7,10 @@ import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Display;
+import android.view.View;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +28,17 @@ public class BoardActivity extends AppCompatActivity {
     private int isGuideModeOn;
     private int boardType;
     private int isColorModeOn;
+
+    private BlockCreator[] backgroundBlocks = new BlockCreator[2];
+    private BlockCreator[] foregroundBlocks = new BlockCreator[2];
+    private BoardCreator[] backgroundBoard = new BoardCreator[2];
+    private BoardCreator[] foregroundBoard = new BoardCreator[2];
+    private VerticalBoard[] verticalBoard = new VerticalBoard[2];
+    private HorizontalBoard[] horizontalBoard = new HorizontalBoard[2];
+    private LinearLayout unitBar;
+
+    private Button button;
+    private FrameLayout topFrame, bottomFrame;
 
     private BlockInfoReader blockInfoReader;
 
@@ -54,6 +69,7 @@ public class BoardActivity extends AppCompatActivity {
 
         Cursor detailCursor = db.rawQuery("SELECT * FROM "+AllinOneContract.Board.TABLE_NAME+boardId,null);
 
+
         if(boardType == BlockCreator.HORIZONTAL || boardType == BlockCreator.HORIZONTAL_STAIR)
             blockInfoReader = new BlockInfoReader(BOARD_ROW, BOARD_COL+1, this);
         else
@@ -69,20 +85,49 @@ public class BoardActivity extends AppCompatActivity {
             blockInfoReader.makeBlockInfo(_id, BOTTOM, bottomText);
         }
 
-        if(boardType == BlockCreator.HORIZONTAL || boardType == BlockCreator.HORIZONTAL_STAIR)
-            createHorizontalBoard(boardId, boardType, isColorModeOn, isGuideModeOn);
-        else
-            createVerticalBoard(boardId, boardType,isColorModeOn, isGuideModeOn);
+        /**/
+        button = findViewById(R.id.button);
+        topFrame = findViewById(R.id.topFrame);
+        bottomFrame = findViewById(R.id.bottomFrame);
+        unitBar = findViewById(R.id.unitBar);
+
+        if(boardType == BlockCreator.HORIZONTAL || boardType == BlockCreator.HORIZONTAL_STAIR){
+            createHorizontalBoard(boardId,R.id.topFrame, boardType, BoardCreator.TOP_BOARD, isColorModeOn, isGuideModeOn);
+            createHorizontalBoard(boardId,R.id.bottomFrame, boardType, BoardCreator.BOTTOM_BOARD, isColorModeOn, isGuideModeOn);
+
+            smallerToLarger();
+            button.setOnClickListener(new View.OnClickListener() {
+                int curScale = BlockCreator.LARGER;
+                @Override
+                public void onClick(View v) {
+                    switch (curScale){
+                        case BlockCreator.SMALLER:
+                            smallerToLarger();
+                            curScale = BlockCreator.LARGER;
+                            break;
+                        case BlockCreator.LARGER:
+                            largerToSmaller();
+                            curScale = BlockCreator.SMALLER;
+                            break;
+                    }
+                }
+            });
+        }
+
+        else{
+            //createVerticalBoard(boardId, boardType,isColorModeOn, isGuideModeOn);
+        }
+
+        /**/
+
 
         detailCursor.close();
         db.close();
         dbHelper.close();
-
-        //Toast.makeText(this, BOARD_ROW+","+BOARD_COL+","+isGuideModeOn+","+boardType,Toast.LENGTH_LONG).show();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    void createHorizontalBoard(int boardId, int curBoardType, int isColorModeOn, int isGuideModeOn){
+    void createHorizontalBoard(int boardId, int guideId, int curBoardType, int curBoardPos, int isColorModeOn, int isGuideModeOn){
         /*기기의 화면 크기를 가져옴*/
         Display display = getWindowManager().getDefaultDisplay();
         Point displaySize = new Point();
@@ -93,7 +138,7 @@ public class BoardActivity extends AppCompatActivity {
         palette.initBackgroundXML(boardId);
 
         /*N*M 크기의 백그라운도 보드 생성*/
-        BlockCreator backgroundBlocks = new BlockCreator(BOARD_ROW, BOARD_COL+1, this);
+        final BlockCreator backgroundBlocks = new BlockCreator(BOARD_ROW, BOARD_COL+1, this);
         backgroundBlocks.setDisplayWidth(displaySize.x);
         backgroundBlocks.setDisplayHeight(displaySize.y);
         backgroundBlocks.calBlockLength();
@@ -105,10 +150,10 @@ public class BoardActivity extends AppCompatActivity {
         backgroundBoard.setBlockViews(backgroundBlocks.getBlockViews());
         backgroundBoard.setMargin(MARGIN);
         backgroundBoard.initConstraint(R.id.constraintLayout);
-        backgroundBoard.constraintBlocks();
+        backgroundBoard.constraintBlocks(guideId);
 
         /*N*M 크기의 포그라운드 보드 생성 가로*/
-        BlockCreator foregroundBlocks = new BlockCreator(BOARD_ROW, BOARD_COL+1, this);
+        final BlockCreator foregroundBlocks = new BlockCreator(BOARD_ROW, BOARD_COL+1, this);
         foregroundBlocks.setDisplayWidth(displaySize.x);
         foregroundBlocks.setDisplayHeight(displaySize.y);
         foregroundBlocks.calBlockLength();
@@ -120,16 +165,21 @@ public class BoardActivity extends AppCompatActivity {
         foregroundBoard.setBlockViews(foregroundBlocks.getBlockViews());
         foregroundBoard.setMargin(MARGIN);
         foregroundBoard.initConstraint(R.id.constraintLayout);
-        foregroundBoard.constraintBlocks();
+        foregroundBoard.constraintBlocks(guideId);
 
-        HorizontalBoard horizontalBoard = new HorizontalBoard(BOARD_ROW, BOARD_COL+1, this);
-        horizontalBoard.setColorPalette(palette);
-        horizontalBoard.setDistance(foregroundBlocks.getBlockLength(), MARGIN);
+        HorizontalBoard horizontalBoard = new HorizontalBoard(BOARD_ROW, BOARD_COL+1, this,palette.getActualBlocksOnForeground());
+        horizontalBoard.setGap(foregroundBlocks.getBlockLength(), MARGIN);
         horizontalBoard.setBlockViews(foregroundBlocks.getBlockViewsId());
         horizontalBoard.setGuide(isGuideModeOn);
+
+        this.backgroundBlocks[curBoardPos] = backgroundBlocks;
+        this.backgroundBoard[curBoardPos] = backgroundBoard;
+        this.foregroundBlocks[curBoardPos] = foregroundBlocks;
+        this.foregroundBoard[curBoardPos] = foregroundBoard;
+        this.horizontalBoard[curBoardPos] = horizontalBoard;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    /*@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     void createVerticalBoard(int boardId, int curBoardType, int isColorModeOn, int isGuideModeOn){
         //기기의 화면 크기를 가져옴
         Display display = getWindowManager().getDefaultDisplay();
@@ -176,5 +226,80 @@ public class BoardActivity extends AppCompatActivity {
         verticalBoard.setDistance(foregroundBlocks.getBlockLength(), MARGIN);
         verticalBoard.setBlockViews(foregroundBlocks.getBlockViewsId());
         verticalBoard.setGuide(isGuideModeOn);
+    }*/
+
+    void smallerToLarger(){
+        foregroundBoard[BoardCreator.TOP_BOARD].detachFromBaseLine();
+        backgroundBoard[BoardCreator.TOP_BOARD].detachFromBaseLine();
+        foregroundBoard[BoardCreator.BOTTOM_BOARD].detachFromBaseLine();
+        backgroundBoard[BoardCreator.BOTTOM_BOARD].detachFromBaseLine();
+
+        backgroundBlocks[BoardCreator.TOP_BOARD].changeBlocksScale(BlockCreator.LARGER);
+        foregroundBlocks[BoardCreator.TOP_BOARD].changeBlocksScale(BlockCreator.LARGER);
+
+        bottomFrame.setVisibility(View.GONE);
+        unitBar.setVisibility(View.GONE);
+        backgroundBlocks[BoardCreator.BOTTOM_BOARD].toggleBlocksVisibility();
+        foregroundBlocks[BoardCreator.BOTTOM_BOARD].toggleBlocksVisibility();
+
+        /*if(verticalBoard[BoardCreator.TOP_BOARD] != null){
+            verticalBoard[BoardCreator.TOP_BOARD].setGap(backgroundBlocks[BoardCreator.TOP_BOARD].getBlockLength(), MARGIN);
+            verticalBoard[BoardCreator.TOP_BOARD].resetBlocks();
+        }
+
+        if(verticalBoard[BoardCreator.BOTTOM_BOARD] != null){
+            verticalBoard[BoardCreator.BOTTOM_BOARD].setGap(backgroundBlocks[BoardCreator.BOTTOM_BOARD].getBlockLength(), MARGIN);
+            verticalBoard[BoardCreator.BOTTOM_BOARD].resetBlocks();
+        }*/
+
+        if(horizontalBoard[BoardCreator.TOP_BOARD]!=null){
+            horizontalBoard[BoardCreator.TOP_BOARD].setGap(backgroundBlocks[BoardCreator.TOP_BOARD].getBlockLength(), MARGIN);
+            horizontalBoard[BoardCreator.TOP_BOARD].resetBlocks();
+        }
+
+        if(horizontalBoard[BoardCreator.BOTTOM_BOARD] != null){
+            horizontalBoard[BoardCreator.BOTTOM_BOARD].setGap(backgroundBlocks[BoardCreator.BOTTOM_BOARD].getBlockLength(), MARGIN);
+            horizontalBoard[BoardCreator.BOTTOM_BOARD].resetBlocks();
+        }
+    }
+
+    void largerToSmaller(){
+        backgroundBlocks[BoardCreator.TOP_BOARD].changeBlocksScale(BlockCreator.SMALLER);
+        foregroundBlocks[BoardCreator.TOP_BOARD].changeBlocksScale(BlockCreator.SMALLER);
+
+        bottomFrame.setVisibility(View.VISIBLE);
+        unitBar.setVisibility(View.VISIBLE);
+        backgroundBlocks[BoardCreator.BOTTOM_BOARD].toggleBlocksVisibility();
+        foregroundBlocks[BoardCreator.BOTTOM_BOARD].toggleBlocksVisibility();
+
+        foregroundBoard[BoardCreator.BOTTOM_BOARD].attachToBaseLine(BoardCreator.BOTTOM_BOARD);
+        backgroundBoard[BoardCreator.BOTTOM_BOARD].attachToBaseLine(BoardCreator.BOTTOM_BOARD);
+        foregroundBoard[BoardCreator.TOP_BOARD].attachToBaseLine(BoardCreator.TOP_BOARD);
+        backgroundBoard[BoardCreator.TOP_BOARD].attachToBaseLine(BoardCreator.TOP_BOARD);
+
+        /*if(verticalBoard[BoardCreator.TOP_BOARD] != null){
+            verticalBoard[BoardCreator.TOP_BOARD].setGap(backgroundBlocks[BoardCreator.TOP_BOARD].getBlockLength(), MARGIN);
+            verticalBoard[BoardCreator.TOP_BOARD].resetBlocks();
+        }
+
+        if(verticalBoard[BoardCreator.BOTTOM_BOARD] != null){
+            verticalBoard[BoardCreator.BOTTOM_BOARD].setGap(backgroundBlocks[BoardCreator.BOTTOM_BOARD].getBlockLength(), MARGIN);
+            verticalBoard[BoardCreator.BOTTOM_BOARD].resetBlocks();
+        }*/
+
+        if(horizontalBoard[BoardCreator.TOP_BOARD] != null){
+            horizontalBoard[BoardCreator.TOP_BOARD].setGap(backgroundBlocks[BoardCreator.TOP_BOARD].getBlockLength(), MARGIN);
+            horizontalBoard[BoardCreator.TOP_BOARD].resetBlocks();
+        }
+
+        if(horizontalBoard[BoardCreator.BOTTOM_BOARD] != null){
+            horizontalBoard[BoardCreator.BOTTOM_BOARD].setGap(backgroundBlocks[BoardCreator.BOTTOM_BOARD].getBlockLength(), MARGIN);
+            horizontalBoard[BoardCreator.BOTTOM_BOARD].resetBlocks();
+        }
+    }
+
+    void disableBottomViews(){
+        bottomFrame.setVisibility(View.GONE);
+        unitBar.setVisibility(View.GONE);
     }
 }

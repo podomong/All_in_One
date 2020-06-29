@@ -12,6 +12,8 @@ import java.util.Stack;
 public class HorizontalBoard extends Board{
     private int DISTANCE = 50;
     private int MARGIN = 2;
+    private int GAP;
+
     private Stack<Pair<Integer, Integer>> changedStateStack;
     private int currentStates[][];
     private View blockViews[][];
@@ -19,9 +21,10 @@ public class HorizontalBoard extends Board{
 
     //private TextView scoreView;
     private boolean isGuideOn;
-    private ColorPalette palette;
+    boolean actualBlocks[][];
 
-    HorizontalBoard(int boardRow, int boardCol, Context context){
+
+    HorizontalBoard(int boardRow, int boardCol, Context context, boolean actualBlocks[][]){
         super(boardRow, boardCol, context);
 
         changedStateStack = new Stack<Pair<Integer, Integer>>();
@@ -29,6 +32,7 @@ public class HorizontalBoard extends Board{
         blockViews = new View[BOARD_ROW][BOARD_COL];
         scores = new int[BOARD_COL];
         isGuideOn = false;
+        this.actualBlocks = actualBlocks;
 
         for(int i=0;i<BOARD_ROW;i++){
             for(int j=1;j<BOARD_COL;j++)
@@ -37,7 +41,6 @@ public class HorizontalBoard extends Board{
 
         for(int i=0;i<BOARD_ROW;i++)
             scores[i] = 1;
-        //scoreView = ((Activity)mContext).findViewById(R.id.scoreView);
     }
 
     private long calScores(){
@@ -81,7 +84,7 @@ public class HorizontalBoard extends Board{
         final int CUR_STATE = currentStates[i][j];
         switch (CUR_STATE){
             case LEFT:
-                blockViews[i][j].animate().translationX(-(DISTANCE+MARGIN)).start();
+                blockViews[i][j].animate().translationX(GAP).start();
                 break;
             case RIGHT:
                 blockViews[i][j].animate().translationX(0).start();
@@ -110,6 +113,20 @@ public class HorizontalBoard extends Board{
         }
     }
 
+    public void resetBlocks(){
+        for(int i=0;i<BOARD_ROW;i++)
+            scores[i] = 1;
+
+        for(int i = 0;i<BOARD_ROW;i++){
+            for(int j=0;j<BOARD_COL;j++){
+                if(actualBlocks[i][j]){
+                    currentStates[i][j] = RIGHT;
+                    moveBlock(i,j);
+                }
+            }
+        }
+    }
+
     private void setBlocks(int i){
         for(int j = scores[i];j<BOARD_COL;j++){
             if(currentStates[i][j] == LEFT) break;
@@ -130,7 +147,7 @@ public class HorizontalBoard extends Board{
     public void setBlockViews(int blockViewsId[][]){
         for(int i=0;i<BOARD_ROW;i++){
             for(int j=1;j<BOARD_COL;j++){
-                if(palette.isActualBlock(BlockCreator.FOREGROUND, i, j))
+                if(actualBlocks[i][j])
                     setBlockView(i,j,blockViewsId[i][j]);
             }
 
@@ -171,13 +188,10 @@ public class HorizontalBoard extends Board{
         });
     }
 
-    public void setDistance(int distance, int margin) {
+    public void setGap(int distance, int margin){
         DISTANCE = distance;
         MARGIN = margin;
-    };
-
-    void setColorPalette(ColorPalette palette){
-        this.palette = palette;
+        GAP = -(DISTANCE+MARGIN);
     }
 
     public void setGuide(int flag){

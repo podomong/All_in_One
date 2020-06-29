@@ -11,6 +11,9 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
 public class BoardCreator extends Board {
+    static final int TOP_BOARD = 0;
+    static final int BOTTOM_BOARD = 1;
+
     private int MARGIN = 2;
     private int DISPLAY_WIDTH;
     private int DISPLAY_HEIGHT;
@@ -59,7 +62,7 @@ public class BoardCreator extends Board {
     }
 
     /*생성된 이미지 블럭 간에 constraint를 지정함*/
-    void constraintBlocks(){
+    void constraintBlocks(int guideId){
         int curViewId;
         int[] idInHorizontalChain = new int[BOARD_COL];
         int[] idInVerticalChain = new int[BOARD_ROW];
@@ -77,8 +80,8 @@ public class BoardCreator extends Board {
             }
 
             controller.createHorizontalChain(
-                    ConstraintSet.PARENT_ID, ConstraintSet.LEFT,
-                    ConstraintSet.PARENT_ID, ConstraintSet.RIGHT,
+                    guideId, ConstraintSet.LEFT,
+                    guideId, ConstraintSet.RIGHT,
                     idInHorizontalChain,
                     null,
                     ConstraintSet.CHAIN_PACKED
@@ -94,8 +97,8 @@ public class BoardCreator extends Board {
             }
 
             controller.createVerticalChain(
-                    ConstraintSet.PARENT_ID, ConstraintSet.TOP,
-                    ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM,
+                    guideId, ConstraintSet.TOP,
+                    guideId, ConstraintSet.BOTTOM,
                     idInVerticalChain,
                     null,
                     ConstraintSet.CHAIN_PACKED
@@ -111,6 +114,27 @@ public class BoardCreator extends Board {
 
             }
         }
+
+        controller.applyTo(layout);
+    }
+
+    void attachToBaseLine(int boardPos){
+        switch (boardPos){
+            case TOP_BOARD:
+                for(int j=0;j<BOARD_COL;j++)
+                    controller.setVerticalBias(blockViews[0][j].getId(),1.0f);
+                break;
+            case BOTTOM_BOARD:
+                for(int j=0;j<BOARD_COL;j++)
+                    controller.setVerticalBias(blockViews[0][j].getId(), 0.0f);
+                break;
+        }
+        controller.applyTo(layout);
+    }
+
+    void detachFromBaseLine(){
+        for(int j=0;j<BOARD_COL;j++)
+            controller.setVerticalBias(blockViews[0][j].getId(),0.5f);
 
         controller.applyTo(layout);
     }

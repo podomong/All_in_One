@@ -10,6 +10,8 @@ import java.util.Stack;
 public class VerticalBoard extends Board{
     private int DISTANCE = 50;
     private int MARGIN = 2;
+    private int GAP;
+
     private Stack<Pair<Integer, Integer>>changedStateStack;
     private int currentStates[][];
     private View blockViews[][];
