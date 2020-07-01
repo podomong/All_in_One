@@ -95,12 +95,6 @@ public class BoardActivity extends AppCompatActivity {
         bottomFrame = findViewById(R.id.bottomFrame);
         unitBar = findViewById(R.id.unitBar);
 
-        if(boardId == 11){
-            LinearLayout unitBarType01 = (LinearLayout) getLayoutInflater().inflate(R.layout.unit_bar_01, null);
-            unitBar.addView(unitBarType01);
-        }
-
-
         if(boardNum>=2){
             switch (boardType){
                 case BlockCreator.HORIZONTAL:
@@ -151,9 +145,20 @@ public class BoardActivity extends AppCompatActivity {
                 backgroundBoard[BoardCreator.BOTTOM_BOARD].attachToBaseLine(BoardCreator.BOTTOM_BOARD);
                 foregroundBoard[BoardCreator.TOP_BOARD].attachToBaseLine(BoardCreator.TOP_BOARD);
                 backgroundBoard[BoardCreator.TOP_BOARD].attachToBaseLine(BoardCreator.TOP_BOARD);
+
+                final UnitBar unitBarControl = new UnitBar(this);
+                unitBarControl.setLength( backgroundBlocks[BoardCreator.TOP_BOARD].getBlockLength(), MARGIN);
+                unitBarControl.setUnitBar(unitBar);
+
+                button.setOnClickListener(new View.OnClickListener() {
+                    int curUnitBarType = 0;
+                    @Override
+                    public void onClick(View v) {
+                        curUnitBarType = (curUnitBarType+1)%UnitBar.UNIT_BAR_NUM;
+                        unitBarControl.setOnUnitBarType(curUnitBarType);
+                    }
+                });
             }
-
-
         }
         else{
             disableBottomViews();
