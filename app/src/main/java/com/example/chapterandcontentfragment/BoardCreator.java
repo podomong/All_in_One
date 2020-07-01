@@ -184,12 +184,11 @@ public class BoardCreator extends Board {
                         break;
 
                     case BlockCreator.VERTICAL_UPSIDE_DOWN:
-                        if(i!=BOARD_ROW-1){
+                        if(i!=BOARD_ROW-1)
                             controller.setMargin(curViewId, ConstraintSet.START, MARGIN);
-                            controller.setMargin(curViewId, ConstraintSet.TOP, MARGIN);
-                        }
                         else if(j == 0)
                             controller.setMargin(curViewId, ConstraintSet.START, MARGIN);
+                        controller.setMargin(curViewId, ConstraintSet.TOP, MARGIN);
                         break;
 
                     case BlockCreator.HORIZONTAL:

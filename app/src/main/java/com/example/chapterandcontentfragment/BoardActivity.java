@@ -39,7 +39,7 @@ public class BoardActivity extends AppCompatActivity {
     private BaseBar[] backgroundBaseBar = new BaseBar[2];
     private BaseBar[] foregroundBaseBar = new BaseBar[2];
 
-    private LinearLayout unitBar;
+    private FrameLayout unitBar;
 
     private Button button;
     private FrameLayout topFrame, bottomFrame;
@@ -95,6 +95,12 @@ public class BoardActivity extends AppCompatActivity {
         bottomFrame = findViewById(R.id.bottomFrame);
         unitBar = findViewById(R.id.unitBar);
 
+        if(boardId == 11){
+            LinearLayout unitBarType01 = (LinearLayout) getLayoutInflater().inflate(R.layout.unit_bar_01, null);
+            unitBar.addView(unitBarType01);
+        }
+
+
         if(boardNum>=2){
             switch (boardType){
                 case BlockCreator.HORIZONTAL:
@@ -105,34 +111,48 @@ public class BoardActivity extends AppCompatActivity {
                     break;
                 case BlockCreator.VERTICAL:
                 case BlockCreator.VERTICAL_UPSIDE_DOWN:
-                    createVerticalBoard(boardId,R.id.topFrame, boardType, BoardCreator.TOP_BOARD, backgroundColorIndex, isGuideModeOn);
+                    if(boardId != 11)
+                        createVerticalBoard(boardId,R.id.topFrame, boardType, BoardCreator.TOP_BOARD, backgroundColorIndex, isGuideModeOn);
+                    else
+                        createVerticalBoard(boardId,R.id.topFrame, BlockCreator.VERTICAL_UPSIDE_DOWN, BoardCreator.TOP_BOARD, backgroundColorIndex, isGuideModeOn);
                     createVerticalBoard(boardId,R.id.bottomFrame, boardType, BoardCreator.BOTTOM_BOARD, backgroundColorIndex, isGuideModeOn);
-                    smallerToLarger();
+                    if(boardId != 11)
+                        smallerToLarger();
                     break;
             }
 
-            button.setOnClickListener(new View.OnClickListener() {
-                int curScale = BlockCreator.LARGER;
-                @Override
-                public void onClick(View v) {
-                    switch (curScale){
-                        case BlockCreator.SMALLER:
-                            smallerToLarger();
-                            curScale = BlockCreator.LARGER;
-                            button.setText("2개판");
-                            if(boardNum>=3)
-                                getSupportActionBar().show();
-                            break;
-                        case BlockCreator.LARGER:
-                            largerToSmaller();
-                            curScale = BlockCreator.SMALLER;
-                            button.setText("1개판");
-                            if(boardNum>=3)
-                                getSupportActionBar().hide();
-                            break;
+            if(boardId != 11){
+                button.setOnClickListener(new View.OnClickListener() {
+                    int curScale = BlockCreator.LARGER;
+                    @Override
+                    public void onClick(View v) {
+                        switch (curScale){
+                            case BlockCreator.SMALLER:
+                                smallerToLarger();
+                                curScale = BlockCreator.LARGER;
+                                button.setText("2개판");
+                                if(boardNum>=3)
+                                    getSupportActionBar().show();
+                                break;
+                            case BlockCreator.LARGER:
+                                largerToSmaller();
+                                curScale = BlockCreator.SMALLER;
+                                button.setText("1개판");
+                                if(boardNum>=3)
+                                    getSupportActionBar().hide();
+                                break;
+                        }
                     }
-                }
-            });
+                });
+            }
+            else{
+                getSupportActionBar().hide();
+                foregroundBoard[BoardCreator.BOTTOM_BOARD].attachToBaseLine(BoardCreator.BOTTOM_BOARD);
+                backgroundBoard[BoardCreator.BOTTOM_BOARD].attachToBaseLine(BoardCreator.BOTTOM_BOARD);
+                foregroundBoard[BoardCreator.TOP_BOARD].attachToBaseLine(BoardCreator.TOP_BOARD);
+                backgroundBoard[BoardCreator.TOP_BOARD].attachToBaseLine(BoardCreator.TOP_BOARD);
+            }
+
 
         }
         else{
@@ -162,10 +182,7 @@ public class BoardActivity extends AppCompatActivity {
         Point displaySize = new Point();
         display.getSize(displaySize);
         ColorPalette palette = new ColorPalette(BOARD_ROW, BOARD_COL+1, this);
-        if(boardId != 11)
-            palette.setColorMode(0);
-        else
-            palette.setColorMode(1);
+        palette.setColorMode(0);
         palette.makeActualBlocks(curBoardType);
         palette.initBackgroundXML(boardId);
 
@@ -254,14 +271,14 @@ public class BoardActivity extends AppCompatActivity {
         backgroundBlocks.makeBackgroundBlocks(boardId, blockInfoReader.getInfo(), backgroundColorIndex);
 
         BaseBar backgroundBaseBar = new BaseBar(BOARD_ROW, BOARD_COL+1, this);
-        backgroundBaseBar.setBoardType(boardType);
+        backgroundBaseBar.setBoardType(curBoardType);
         backgroundBaseBar.initBaseBar();
         backgroundBaseBar.setLength(backgroundBlocks.getBlockLength(),MARGIN);
         backgroundBaseBar.calBarLength();
 
         BoardCreator backgroundBoard = new BoardCreator(BOARD_ROW+1, BOARD_COL, this);
         backgroundBoard.setBlockViews(backgroundBlocks.getBlockViews());
-        backgroundBoard.setBaseBar(boardType, backgroundBaseBar);
+        backgroundBoard.setBaseBar(curBoardType, backgroundBaseBar);
         backgroundBoard.setMargin(MARGIN);
         backgroundBoard.initConstraint(R.id.constraintLayout);
         backgroundBoard.constraintBlocks(guideId);
@@ -277,21 +294,21 @@ public class BoardActivity extends AppCompatActivity {
         foregroundBlocks.makeForegroundBlocks();
 
         BaseBar foregroundBaseBar = new BaseBar(BOARD_ROW, BOARD_COL+1, this);
-        foregroundBaseBar.setBoardType(boardType);
+        foregroundBaseBar.setBoardType(curBoardType);
         foregroundBaseBar.initBaseBar();
         foregroundBaseBar.setLength(backgroundBlocks.getBlockLength(),MARGIN);
         foregroundBaseBar.calBarLength();
 
         BoardCreator foregroundBoard = new BoardCreator(BOARD_ROW+1, BOARD_COL, this);
         foregroundBoard.setBlockViews(foregroundBlocks.getBlockViews());
-        foregroundBoard.setBaseBar(boardType, foregroundBaseBar);
+        foregroundBoard.setBaseBar(curBoardType, foregroundBaseBar);
         foregroundBoard.setMargin(MARGIN);
         foregroundBoard.initConstraint(R.id.constraintLayout);
         foregroundBoard.constraintBlocks(guideId);
 
         //생성된 블럭 이미지에 터치 이벤트 및 이동 애니메이션 설정
         VerticalBoard verticalBoard = new VerticalBoard(BOARD_ROW+1, BOARD_COL, this,palette.getActualBlocksOnForeground());
-        verticalBoard.setCurBoardType(boardType);
+        verticalBoard.setCurBoardType(curBoardType);
         verticalBoard.setGap(foregroundBlocks.getBlockLength(), MARGIN);
         verticalBoard.setBlockViews(foregroundBlocks.getBlockViewsId());
 
