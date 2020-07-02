@@ -24,6 +24,8 @@ public class BoardCreator extends Board {
     private ConstraintLayout layout;
     private View[][] blockViews;
     private int[][] blockViewsId;
+    private boolean isLabeled = false;
+    private LabelBar labelBar;
 
     private int boardType;
     private BaseBar baseBars;
@@ -122,6 +124,23 @@ public class BoardCreator extends Board {
         BOARD_COL = blockViews[0].length;
     }
 
+    void setLabelBar(LabelBar labelBar){
+        isLabeled = true;
+        this.labelBar = labelBar;
+        View tempBlockViews[][];
+        tempBlockViews = new View[BOARD_ROW][BOARD_COL+1];
+        for(int i=0;i<BOARD_ROW;i++)
+            tempBlockViews[i][0] = labelBar.getLabelView(i);
+
+        for(int i=0;i<BOARD_ROW;i++){
+            for(int j=0;j<BOARD_COL;j++)
+                tempBlockViews[i][j+1] = blockViews[i][j];
+        }
+        blockViews = tempBlockViews;
+        BOARD_ROW = blockViews.length;
+        BOARD_COL = blockViews[0].length;
+    }
+
     void setBlockViewsId(int[][] blockViewsId){
         this.blockViewsId = blockViewsId;
     }
@@ -193,12 +212,26 @@ public class BoardCreator extends Board {
 
                     case BlockCreator.HORIZONTAL:
                     case BlockCreator.HORIZONTAL_STAIR:
-                        if(j!=0){
-                            controller.setMargin(curViewId, ConstraintSet.START, MARGIN);
-                            controller.setMargin(curViewId, ConstraintSet.TOP, MARGIN);
+                        if(!isLabeled){
+                            if(j!=0){
+                                controller.setMargin(curViewId, ConstraintSet.START, MARGIN);
+                                controller.setMargin(curViewId, ConstraintSet.TOP, MARGIN);
+                            }
+                            else if(i == 0)
+                                controller.setMargin(curViewId, ConstraintSet.TOP, MARGIN);
                         }
-                        else if(i == 0)
-                            controller.setMargin(curViewId, ConstraintSet.TOP, MARGIN);
+                        else{
+                            if(j!=1){
+                                if(j == 0)
+                                    controller.setMargin(curViewId, ConstraintSet.END, 3*MARGIN);
+                                else
+                                    controller.setMargin(curViewId, ConstraintSet.START, MARGIN);
+                                controller.setMargin(curViewId, ConstraintSet.TOP, MARGIN);
+
+                            }
+                            else if(i == 0)
+                                controller.setMargin(curViewId, ConstraintSet.TOP, MARGIN);
+                        }
 
                         break;
                 }

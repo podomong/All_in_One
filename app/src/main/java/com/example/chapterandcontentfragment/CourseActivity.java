@@ -22,6 +22,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -67,8 +70,18 @@ public class CourseActivity extends AppCompatActivity {
         //linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         //recyclerView.setLayoutManager(linearLayoutManager);
 
-        Handler handler = new Handler();
-        handler.postDelayed(new SplashHandler(), 1500);
+        //Handler handler = new Handler();
+        //handler.postDelayed(new SplashHandler(), 1500);
+        ImageView titleImage = findViewById(R.id.titleImage);
+        titleImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CourseActivity.this, ChapterAndContentActivity.class);
+                intent.putExtra(AllinOneContract.Course.COURSE_ID, 1);
+                startActivity(intent);
+                CourseActivity.this.finish();
+            }
+        });
     }
 
     private class SplashHandler implements Runnable{

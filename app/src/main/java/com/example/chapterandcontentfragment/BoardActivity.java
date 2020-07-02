@@ -207,9 +207,20 @@ public class BoardActivity extends AppCompatActivity {
         backgroundBaseBar.setLength(backgroundBlocks.getBlockLength(),MARGIN);
         backgroundBaseBar.calBarLength();
 
+        LabelBar backgroundLabelBar = null;
+        if(14<=boardId&&boardId<=17){
+            backgroundLabelBar = new LabelBar(BOARD_ROW, BOARD_COL+1, this);
+            backgroundLabelBar.initLabels(boardId);
+            backgroundLabelBar.setLength(backgroundBlocks.getBlockLength());
+            backgroundLabelBar.setLabelBars();
+        }
+
+
         BoardCreator backgroundBoard = new BoardCreator(BOARD_ROW, BOARD_COL+1, this);
         backgroundBoard.setBlockViews(backgroundBlocks.getBlockViews());
         backgroundBoard.setBaseBar(boardType, backgroundBaseBar);
+        if(backgroundLabelBar != null)
+            backgroundBoard.setLabelBar(backgroundLabelBar);
         backgroundBoard.setMargin(MARGIN);
         backgroundBoard.initConstraint(R.id.constraintLayout);
         backgroundBoard.constraintBlocks(guideId);
@@ -230,15 +241,26 @@ public class BoardActivity extends AppCompatActivity {
         foregroundBaseBar.setLength(backgroundBlocks.getBlockLength(),MARGIN);
         foregroundBaseBar.calBarLength();
 
+        LabelBar foregroundLabelBar = null;
+        if(14<=boardId&&boardId<=17){
+            foregroundLabelBar = new LabelBar(BOARD_ROW, BOARD_COL+1, this);
+            foregroundLabelBar.initLabels(boardId);
+            foregroundLabelBar.setLength(backgroundBlocks.getBlockLength());
+            foregroundLabelBar.setLabelBars();
+        }
+
         BoardCreator foregroundBoard = new BoardCreator(BOARD_ROW, BOARD_COL+1, this);
         foregroundBoard.setBlockViews(foregroundBlocks.getBlockViews());
         foregroundBoard.setBaseBar(boardType, foregroundBaseBar);
+        if(foregroundLabelBar != null)
+            foregroundBoard.setLabelBar(foregroundLabelBar);
         foregroundBoard.setMargin(MARGIN);
         foregroundBoard.initConstraint(R.id.constraintLayout);
         foregroundBoard.constraintBlocks(guideId);
 
         HorizontalBoard horizontalBoard = new HorizontalBoard(BOARD_ROW, BOARD_COL+1, this,palette.getActualBlocksOnForeground());
         horizontalBoard.setGap(foregroundBlocks.getBlockLength(), MARGIN);
+        horizontalBoard.setGroup(boardId);
         horizontalBoard.setBlockViews(foregroundBlocks.getBlockViewsId());
         //horizontalBoard.setGuide(isGuideModeOn);
 

@@ -20,7 +20,9 @@ public class HorizontalBoard extends Board{
     private int scores[];
 
     //private TextView scoreView;
-    private boolean isGuideOn;
+    private boolean isGuideOn = false;
+    private boolean isGroupModeOn = false;
+    Pair<Integer, Integer> groupBlocks[][];
     boolean actualBlocks[][];
 
 
@@ -144,6 +146,75 @@ public class HorizontalBoard extends Board{
             resetBlocks(i);
     }
 
+    void setGroupMode(boolean flag){
+        isGroupModeOn = flag;
+    }
+
+    void setGroup(int boardId){
+        if(14<=boardId && boardId <= 17){
+            isGroupModeOn = true;
+
+            groupBlocks = new Pair[BOARD_ROW][BOARD_COL];
+
+            int[] groupSize;
+            switch (boardId){
+                case 14:
+                    groupSize = new int[4];
+                    groupSize[0] = 1;
+                    groupSize[1] = 2;
+                    groupSize[2] = 5;
+                    groupSize[3] = 10;
+                    break;
+                case 15:
+                    groupSize = new int[3];
+                    groupSize[0] = 1;
+                    groupSize[1] = 3;
+                    groupSize[2] = 9;
+                    break;
+                case 16:
+                    groupSize = new int[4];
+                    groupSize[0] = 1;
+                    groupSize[1] = 2;
+                    groupSize[2] = 4;
+                    groupSize[3] = 8;
+                    break;
+                case 17:
+                    groupSize = new int[4];
+                    groupSize[0] = 1;
+                    groupSize[1] = 2;
+                    groupSize[2] = 3;
+                    groupSize[3] = 6;
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + boardId);
+            }
+
+            int groupIndex, groupStart, groupEnd;
+            for(int row = 0; row<BOARD_ROW; row++){
+                for(int col = 1; col<BOARD_COL;col++){
+                    groupIndex = (col-1)/groupSize[row];
+                    groupStart = groupSize[row]*groupIndex+1;
+                    groupEnd = groupStart+(groupSize[row]-1);
+                    groupBlocks[row][col] = new Pair(new Integer(groupStart), new Integer(groupEnd));
+                }
+            }
+        }
+    }
+
+    int getBlockFromGroup(int rowId, int colId){
+        if(!isGroupModeOn) return colId;
+        int realColId = colId;
+        switch (currentStates[rowId][colId]){
+            case RIGHT:
+                realColId = groupBlocks[rowId][colId].second;
+                break;
+            case LEFT:
+                realColId = groupBlocks[rowId][colId].first;
+                break;
+        }
+        return realColId;
+    }
+
     public void setBlockViews(int blockViewsId[][]){
         for(int i=0;i<BOARD_ROW;i++){
             for(int j=1;j<BOARD_COL;j++){
@@ -167,9 +238,10 @@ public class HorizontalBoard extends Board{
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
+                        colId = getBlockFromGroup(rowId, colId);
                         checkChange(rowId, colId);
                         applyChange();
-                        guideMove(rowId, colId);
+                        //guideMove(rowId, colId);
                         //scoreView.setText(Long.toString(calScores()));
                         break;
                     case MotionEvent.ACTION_MOVE:
