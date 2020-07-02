@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/unitBar1"
+    android:orientation="horizontal"
+    android:gravity="center_horizontal"
+    android:paddingTop="2dp"
+    android:paddingBottom="2dp"
+    >
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="48dp"
+        android:layout_height="match_parent"
+        android:id="@+id/unitBlock1"
+        app:cardBackgroundColor="#7D1E72"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:weightSum="1"
+            >
+            <TextView
+                android:layout_height="0dp"
+                android:layout_width="match_parent"
+                android:layout_weight="0.5"
+                android:text="100,000"
+                android:fontFamily="@font/cookie_run_regular"
+
+                android:gravity="center"
+                android:textSize="18sp"
+                android:textScaleX="0.36"
+                android:textColor="@color/colorBrightYellow"
+                />
+            <TextView
+                android:layout_height="0dp"
+                android:layout_width="match_parent"
+                android:layout_weight="0.5"
+                android:text="십만"
+
+                android:fontFamily="@font/cookie_run_regular"
+                android:gravity="center"
+                android:textSize = "18sp"
+                android:textColor="@color/colorBrightYellow"/>
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="48dp"
+        android:layout_height="match_parent"
+        android:id="@+id/unitBlock2"
+        app:cardBackgroundColor="#331269"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:layout_height="0dp"
+                android:layout_width="match_parent"
+                android:layout_weight="0.5"
+                android:text="10,000"
+                android:fontFamily="@font/cookie_run_regular"
+
+                android:gravity="center"
+                android:textSize="18sp"
+                android:textScaleX="0.415"
+                android:textColor="@color/colorBrightYellow"
+                />
+            <TextView
+                android:layout_height="0dp"
+                android:layout_width="match_parent"
+                android:layout_weight="0.5"
+                android:text="만"
+                android:fontFamily="@font/cookie_run_regular"
+                android:gravity="center"
+                android:textSize = "18sp"
+                android:textColor="@color/colorBrightYellow"/>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="48dp"
+        android:layout_height="match_parent"
+        android:id="@+id/unitBlock3"
+        app:cardBackgroundColor="#03569A"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:layout_height="0dp"
+                android:layout_width="match_parent"
+                android:layout_weight="0.5"
+                android:text="1,000"
+                android:fontFamily="@font/cookie_run_regular"
+
+                android:gravity="center"
+                android:textSize="18sp"
+                android:textScaleX="0.39"
+                android:textColor="@color/colorBrightYellow"
+                />
+            <TextView
+                android:layout_height="0dp"
+                android:layout_width="match_parent"
+                android:layout_weight="0.5"
+                android:text="천"
+                android:fontFamily="@font/cookie_run_regular"
+                android:gravity="center"
+                android:textSize = "18sp"
+                android:textColor="@color/colorBrightYellow"/>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="48dp"
+        android:layout_height="match_parent"
+        android:id="@+id/unitBlock4"
+        app:cardBackgroundColor="#038CC2"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_height="0dp"
+                android:layout_width="match_parent"
+                android:layout_weight="0.5"
+                android:text="100"
+                android:fontFamily="@font/cookie_run_regular"
+
+                android:gravity="center"
+                android:textSize="18sp"
+                android:textScaleX="0.5"
+                android:textColor="@color/colorBrightYellow"
+                />
+            <TextView
+                android:layout_height="0dp"
+                android:layout_width="match_parent"
+                android:layout_weight="0.5"
+                android:text="백"
+                android:fontFamily="@font/cookie_run_regular"
+                android:gravity="center"
+                android:textSize = "18sp"
+                android:textColor="@color/colorBrightYellow"/>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="48dp"
+        android:layout_height="match_parent"
+        android:id="@+id/unitBlock5"
+        app:cardBackgroundColor="#028178"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:layout_height="0dp"
+                android:layout_width="match_parent"
+                android:layout_weight="0.5"
+                android:text="10"
+                android:fontFamily="@font/cookie_run_regular"
+
+
+                android:gravity="center"
+                android:textSize="18sp"
+                android:textScaleX="0.6"
+                android:textColor="@color/colorBrightYellow"
+                />
+            <TextView
+                android:layout_height="0dp"
+                android:layout_width="match_parent"
+                android:layout_weight="0.5"
+                android:text="십"
+                android:fontFamily="@font/cookie_run_regular"
+                android:gravity="center"
+                android:textSize = "18sp"
+                android:textColor="@color/colorBrightYellow"/>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="48dp"
+        android:layout_height="match_parent"
+        android:id="@+id/unitBlock6"
+        app:cardBackgroundColor="#018E40"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:layout_height="0dp"
+                android:layout_width="match_parent"
+                android:layout_weight="0.5"
+                android:text="1"
+                android:fontFamily="@font/cookie_run_regular"
+
+
+                android:gravity="center"
+                android:textSize="18sp"
+                android:textScaleX="0.8"
+                android:textColor="@color/colorBrightYellow"
+                />
+            <TextView
+                android:layout_height="0dp"
+                android:layout_width="match_parent"
+                android:layout_weight="0.5"
+                android:text="일"
+                android:fontFamily="@font/cookie_run_regular"
+                android:gravity="center"
+                android:textSize = "18sp"
+                android:textColor="@color/colorBrightYellow"/>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="48dp"
+        android:layout_height="match_parent"
+        android:id="@+id/unitBlock7"
+        app:cardBackgroundColor="#A7D210"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:layout_height="0dp"
+                android:layout_width="match_parent"
+                android:layout_weight="0.5"
+                android:text="0.1"
+                android:fontFamily="@font/cookie_run_regular"
+                android:textColor="@color/colorChocolate"
+
+                android:gravity="center"
+                android:textSize="18sp"/>
+            <TextView
+                android:layout_height="0dp"
+                android:layout_width="match_parent"
+                android:layout_weight="0.5"
+                android:text="소수첫째"
+                android:fontFamily="@font/cookie_run_regular"
+                android:textColor="@color/colorChocolate"
+                android:gravity="center"
+                android:textSize = "18sp" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="48dp"
+        android:layout_height="match_parent"
+        android:id="@+id/unitBlock8"
+        app:cardBackgroundColor="#FFEA4F"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:layout_height="0dp"
+                android:layout_width="match_parent"
+                android:layout_weight="0.5"
+                android:text="0.01"
+                android:fontFamily="@font/cookie_run_regular"
+                android:textColor="@color/colorChocolate"
+
+                android:gravity="center"
+                android:textSize="18sp" />
+            <TextView
+                android:layout_height="0dp"
+                android:layout_width="match_parent"
+                android:layout_weight="0.5"
+                android:text="소수둘째"
+                android:fontFamily="@font/cookie_run_regular"
+                android:textColor="@color/colorChocolate"
+                android:gravity="center"
+                android:textSize = "18sp" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="48dp"
+        android:layout_height="match_parent"
+        android:id="@+id/unitBlock9"
+        app:cardBackgroundColor="#E38A24"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:layout_height="0dp"
+                android:layout_width="match_parent"
+                android:layout_weight="0.5"
+                android:text="0.001"
+                android:fontFamily="@font/cookie_run_regular"
+
+                android:textColor="@color/colorChocolate"
+                android:gravity="center"
+                android:textSize="18sp" />
+            <TextView
+                android:layout_height="0dp"
+                android:layout_width="match_parent"
+                android:layout_weight="0.5"
+                android:text="소수셋째"
+                android:fontFamily="@font/cookie_run_regular"
+                android:textColor="@color/colorChocolate"
+                android:gravity="center"
+                android:textSize = "18sp" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="48dp"
+        android:layout_height="match_parent"
+        android:id="@+id/unitBlock10"
+        app:cardBackgroundColor="#D62E21"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:layout_height="0dp"
+                android:layout_width="match_parent"
+                android:layout_weight="0.5"
+                android:text="0.0001"
+                android:fontFamily="@font/cookie_run_regular"
+                android:textColor="@color/colorChocolate"
+                android:gravity="center"
+                android:textSize="18sp" />
+            <TextView
+                android:layout_height="0dp"
+                android:layout_width="match_parent"
+                android:layout_weight="0.5"
+                android:text="소수넷째"
+                android:fontFamily="@font/cookie_run_regular"
+                android:textColor="@color/colorChocolate"
+                android:gravity="center"
+                android:textSize = "18sp" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+</LinearLayout>
