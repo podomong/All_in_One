@@ -41,10 +41,10 @@ public class BoardActivity extends AppCompatActivity {
 
     private FrameLayout unitBar;
 
-    private Button button;
+    private Button button, unitBarButton;
     private FrameLayout topFrame, bottomFrame;
 
-    private BlockInfoReader blockInfoReader;
+    private BlockInfoReader blockInfoReader, topBlockInfoReader;
 
     @RequiresApi(api = Build.VERSION_CODES.P)
     @Override
@@ -90,10 +90,29 @@ public class BoardActivity extends AppCompatActivity {
             blockInfoReader.makeBlockInfo(_id, BOTTOM, bottomText);
         }
 
+        if(boardId == 11){
+            Cursor topBoardDetailCursor = db.rawQuery("SELECT * FROM "+AllinOneContract.Board.TABLE_NAME+31,null);
+            topBlockInfoReader = new BlockInfoReader(BOARD_ROW+1,BOARD_COL,this);
+
+            while (topBoardDetailCursor.moveToNext()){
+                int _id = topBoardDetailCursor.getInt(topBoardDetailCursor.getColumnIndex(AllinOneContract.Board._ID));
+
+                String topText = topBoardDetailCursor.getString(topBoardDetailCursor.getColumnIndex(AllinOneContract.Board.TOP_TEXT));
+                String bottomText = topBoardDetailCursor.getString(topBoardDetailCursor.getColumnIndex(AllinOneContract.Board.BOTTOM_TEXT));
+                System.out.println("top text : "+topText + ", bottom text : "+bottomText);
+
+                topBlockInfoReader.makeBlockInfo(_id, TOP, topText);
+                topBlockInfoReader.makeBlockInfo(_id,BOTTOM, bottomText);
+            }
+
+            topBoardDetailCursor.close();
+        }
+
         button = findViewById(R.id.button);
         topFrame = findViewById(R.id.topFrame);
         bottomFrame = findViewById(R.id.bottomFrame);
         unitBar = findViewById(R.id.unitBar);
+        unitBarButton = findViewById(R.id.unitBarButton);
 
         if(boardNum>=2){
             switch (boardType){
@@ -116,6 +135,7 @@ public class BoardActivity extends AppCompatActivity {
             }
 
             if(boardId != 11){
+                unitBarButton.setVisibility(View.GONE);
                 button.setOnClickListener(new View.OnClickListener() {
                     int curScale = BlockCreator.LARGER;
                     @Override
@@ -127,6 +147,7 @@ public class BoardActivity extends AppCompatActivity {
                                 button.setText("2개판");
                                 if(boardNum>=3)
                                     getSupportActionBar().show();
+                                unitBarButton.setVisibility(View.GONE);
                                 break;
                             case BlockCreator.LARGER:
                                 largerToSmaller();
@@ -134,6 +155,7 @@ public class BoardActivity extends AppCompatActivity {
                                 button.setText("1개판");
                                 if(boardNum>=3)
                                     getSupportActionBar().hide();
+                                unitBarButton.setVisibility(View.GONE);
                                 break;
                         }
                     }
@@ -150,12 +172,17 @@ public class BoardActivity extends AppCompatActivity {
                 unitBarControl.setLength( backgroundBlocks[BoardCreator.TOP_BOARD].getBlockLength(), MARGIN);
                 unitBarControl.setUnitBar(unitBar);
 
-                button.setOnClickListener(new View.OnClickListener() {
+                final String []unitBarText = {"자연수\r\n자리막대","소수\r\n자리막대"};
+                button.setVisibility(View.GONE);
+                unitBarButton.setText(unitBarText[0]);
+                unitBarButton.setOnClickListener(new View.OnClickListener() {
                     int curUnitBarType = 0;
                     @Override
                     public void onClick(View v) {
                         curUnitBarType = (curUnitBarType+1)%UnitBar.UNIT_BAR_NUM;
                         unitBarControl.setOnUnitBarType(curUnitBarType);
+                        unitBarButton.setText(unitBarText[curUnitBarType]);
+                        button.setVisibility(View.GONE);
                     }
                 });
             }
@@ -295,8 +322,14 @@ public class BoardActivity extends AppCompatActivity {
         backgroundBlocks.calBlockLength();
         backgroundBlocks.setColorPalette(palette);
         backgroundBlocks.setBoardType(curBoardType);
-        backgroundBlocks.makeBackgroundBlocks(boardId, blockInfoReader.getInfo(), backgroundColorIndex);
-
+        if(boardId != 11)
+            backgroundBlocks.makeBackgroundBlocks(boardId, blockInfoReader.getInfo(), backgroundColorIndex);
+        else{
+            if(curBoardPos == BoardCreator.BOTTOM_BOARD)
+                backgroundBlocks.makeBackgroundBlocks(11, blockInfoReader.getInfo(), backgroundColorIndex);
+            else
+                backgroundBlocks.makeBackgroundBlocks(31, topBlockInfoReader.getInfo(), backgroundColorIndex);
+        }
         BaseBar backgroundBaseBar = new BaseBar(BOARD_ROW, BOARD_COL+1, this);
         backgroundBaseBar.setBoardType(curBoardType);
         backgroundBaseBar.initBaseBar();
@@ -430,5 +463,6 @@ public class BoardActivity extends AppCompatActivity {
         bottomFrame.setVisibility(View.GONE);
         unitBar.setVisibility(View.GONE);
         button.setVisibility(View.GONE);
+        unitBarButton.setVisibility(View.GONE);
     }
 }

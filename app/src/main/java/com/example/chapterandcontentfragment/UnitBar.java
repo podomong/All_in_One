@@ -7,12 +7,12 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 public class UnitBar {
-    static public int UNIT_BAR_NUM = 4;
+    static public int UNIT_BAR_NUM = 2;
 
     private int LENGTH;
     private int MARGIN;
     private Context context;
-    private LinearLayout[] unitBarType = new LinearLayout[4];
+    private LinearLayout[] unitBarType = new LinearLayout[UNIT_BAR_NUM];
     private int curUnitBarIndex = 0;
     UnitBar(Context context){
         this.context = context;
@@ -42,11 +42,11 @@ public class UnitBar {
             child.requestLayout();
         }
 
-        LinearLayout topUnitBar, bottomUnitBar;
-        int[] lengthSet = new int[3];
+        //LinearLayout topUnitBar, bottomUnitBar;
+        //int[] lengthSet = new int[3];
 
         //enroll unit_bar_2
-        unitBarType[2] = (LinearLayout) ((Activity)context).getLayoutInflater().inflate(R.layout.unit_bar_2, null);
+        /*unitBarType[2] = (LinearLayout) ((Activity)context).getLayoutInflater().inflate(R.layout.unit_bar_2, null);
         topUnitBar = unitBarType[2].findViewById(R.id.topUnitBar);
         bottomUnitBar = unitBarType[2].findViewById(R.id.bottomUnitBar);
         for(int i=0;i<topUnitBar.getChildCount();i++){
@@ -64,10 +64,10 @@ public class UnitBar {
             child.getLayoutParams().width = lengthSet[i];
             ((LinearLayout.LayoutParams)child.getLayoutParams()).setMargins(MARGIN, 0,0,0);
             child.requestLayout();
-        }
+        }*/
 
         //enroll unit_bar_3
-        unitBarType[3] = (LinearLayout) ((Activity)context).getLayoutInflater().inflate(R.layout.unit_bar_3, null);
+        /*unitBarType[3] = (LinearLayout) ((Activity)context).getLayoutInflater().inflate(R.layout.unit_bar_3, null);
         topUnitBar = unitBarType[3].findViewById(R.id.topUnitBar);
         bottomUnitBar = unitBarType[3].findViewById(R.id.bottomUnitBar);
         for(int i=0;i<topUnitBar.getChildCount();i++){
@@ -85,17 +85,17 @@ public class UnitBar {
             child.getLayoutParams().width = lengthSet[i];
             ((LinearLayout.LayoutParams)child.getLayoutParams()).setMargins(MARGIN, 0,0,0);
             child.requestLayout();
-        }
+        }*/
 
 
         unitBar.addView(unitBarType[0]);
         unitBar.addView(unitBarType[1]);
-        unitBar.addView(unitBarType[2]);
-        unitBar.addView(unitBarType[3]);
+        //unitBar.addView(unitBarType[2]);
+        //unitBar.addView(unitBarType[3]);
 
         setOffUnitBarType(1);
-        setOffUnitBarType(2);
-        setOffUnitBarType(3);
+        //setOffUnitBarType(2);
+        //setOffUnitBarType(3);
     }
 
     public void setOnUnitBarType(int index){

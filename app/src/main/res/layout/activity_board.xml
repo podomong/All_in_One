@@ -17,9 +17,27 @@
         android:textColor="@color/colorBrightYellow"
         android:textSize="24sp"
         android:background="@drawable/button_background"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.975"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0655" />
+
+    <Button
+        android:id="@+id/unitBarButton"
+        android:layout_width="120dp"
+        android:layout_height="60dp"
+        android:autoSizeTextType="uniform"
+        android:background="@drawable/unit_bar_button_background"
+        android:fontFamily="@font/cookie_run_regular"
+        android:text=""
+        android:textColor="@color/colorBrightYellow"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.98"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0655" />
@@ -57,20 +75,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/unitBar" />
-
-    <!--
-    <TextView
-        android:id="@+id/scoreView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="0"
-        android:textSize="32dp"
-
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.063" />
-
-     -->
 </androidx.constraintlayout.widget.ConstraintLayout>
