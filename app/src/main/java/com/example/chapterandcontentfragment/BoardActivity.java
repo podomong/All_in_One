@@ -172,7 +172,7 @@ public class BoardActivity extends AppCompatActivity {
                 unitBarControl.setLength( backgroundBlocks[BoardCreator.TOP_BOARD].getBlockLength(), MARGIN);
                 unitBarControl.setUnitBar(unitBar);
 
-                final String []unitBarText = {"자연수\r\n자리막대","소수\r\n자리막대"};
+                final String []unitBarText = {"소수\r\n자리막대","자연수\r\n자리막대"};
                 button.setVisibility(View.GONE);
                 unitBarButton.setText(unitBarText[0]);
                 unitBarButton.setOnClickListener(new View.OnClickListener() {

@@ -13,6 +13,7 @@ public class UnitBar {
     private int MARGIN;
     private Context context;
     private LinearLayout[] unitBarType = new LinearLayout[UNIT_BAR_NUM];
+    private LinearLayout unitBarDot;
     private int curUnitBarIndex = 0;
     UnitBar(Context context){
         this.context = context;
@@ -87,9 +88,25 @@ public class UnitBar {
             child.requestLayout();
         }*/
 
+        int[] lengthSet = new int[3];
+        lengthSet[0] = 6*LENGTH+1*MARGIN;
+        lengthSet[1] = 8*MARGIN;
+        lengthSet[2] = 4*LENGTH-1*MARGIN;
+        unitBarDot = (LinearLayout) ((Activity)context).getLayoutInflater().inflate(R.layout.unit_bar_dot, null);
+        for(int i=0;i<unitBarDot.getChildCount();i++){
+            View child = unitBarDot.getChildAt(i);
+            child.getLayoutParams().width = lengthSet[i];
+            if(i==1)
+                child.getLayoutParams().height = lengthSet[i];
+
+            ((LinearLayout.LayoutParams)child.getLayoutParams()).setMargins(MARGIN, 0,0,0);
+            child.requestLayout();
+        }
+
 
         unitBar.addView(unitBarType[0]);
         unitBar.addView(unitBarType[1]);
+        unitBar.addView(unitBarDot);
         //unitBar.addView(unitBarType[2]);
         //unitBar.addView(unitBarType[3]);
 
@@ -101,10 +118,14 @@ public class UnitBar {
     public void setOnUnitBarType(int index){
         setOffUnitBarType(curUnitBarIndex);
         unitBarType[index].setVisibility(View.VISIBLE);
+        if(index == 1)
+            unitBarDot.setVisibility(View.VISIBLE);
         curUnitBarIndex = index;
     }
 
     private void setOffUnitBarType(int index){
         unitBarType[index].setVisibility(View.GONE);
+        if(index == 1)
+            unitBarDot.setVisibility(View.GONE);
     }
 }
