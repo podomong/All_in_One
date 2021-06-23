@@ -21,7 +21,7 @@
 
 이에 따라 리스트를 다음 화면과 같이 구현하였음
 
-![res/all_in_one_menu](res/all_in_one_menu.gif)
+![res/all_in_one_menu](res/all_in_one_menu.gif){: width="70%" height="70%"}
 
 
 선생님들이 교구와 그것을 어떻게 사용하는지를 기술한 메뉴얼을 주셨기 때문에 교구를 이리저리 움직이면서 어떤 기능이 필요한지 식별할 수 있었음.
