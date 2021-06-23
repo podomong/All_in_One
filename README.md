@@ -21,7 +21,7 @@
 
 이에 따라 리스트를 다음 화면과 같이 구현하였음
 
-<img src = "res/all_in_one_menu.gif" width="70%">
+<img src = "res/all_in_one_menu.gif" width="40%">
 
 
 
