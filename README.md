@@ -41,9 +41,15 @@
 
 ### 기능 구현
 
+1) 분수판에서 버튼을 묶음 단위로 이동하기
 <img src = "res/all_in_one_board01.gif" width="40%">
-<img src = "res/all_in_one_board02.gif" width="40%">
+
+2) 버튼 클릭 시 이동방향으로 인접해있는 버튼들 밀어내기
 <img src = "res/all_in_one_board03.gif" width="40%">
+
+3) 두 개 판을 나란히 이어붙여 사용하기
+<img src = "res/all_in_one_board02.gif" width="40%">
+
 
 ## 느낀 점
 
