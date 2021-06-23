@@ -42,6 +42,8 @@
 ### 기능 구현
 
 <img src = "res/all_in_one_board01.gif" width="40%">
+<img src = "res/all_in_one_board02.gif" width="40%">
+<img src = "res/all_in_one_board03.gif" width="40%">
 
 ## 느낀 점
 
